@@ -167,6 +167,8 @@ body::after { width: 320px; height: 320px; bottom: -120px; left: -100px;
   border: 2px solid #D8CDB6; display: grid; place-items: center; color: #fff; font-size: .8rem; transition: all .15s ease; }
 .option.selected { border-color: var(--emerald); background: #E9F6EF; box-shadow: 0 8px 18px rgba(11,110,79,.16); }
 .option.selected .opt-check { background: var(--emerald); border-color: var(--emerald); }
+.opt-rec { display: inline-block; font-size: .72rem; font-weight: 700; color: var(--gold-deep);
+  background: #FFF3D6; border-radius: 999px; padding: 2px 8px; margin-left: 4px; white-space: nowrap; vertical-align: 1px; }
 
 .nav-row { display: flex; gap: 12px; margin-top: 18px; align-items: center; }
 .nav-back { flex: 0 0 auto; background: none; border: none; color: var(--ink-soft); font-family: var(--font);
@@ -301,6 +303,16 @@ body::after { width: 320px; height: 320px; bottom: -120px; left: -100px;
 
 .footer { text-align: center; margin-top: 30px; color: var(--ink-soft); font-size: .82rem; }
 .footer b { color: var(--emerald); }
+
+/* creator credit */
+.credit-card {
+  display: block; text-align: center;
+  background: linear-gradient(135deg, #FFF6E5, var(--lotus-soft));
+  border: 2px solid var(--gold); border-radius: var(--radius-sm);
+  padding: 13px 16px; margin-top: 18px; font-size: .92rem; font-weight: 600; color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.credit-card b { color: var(--emerald-deep); }
 
 /* small screens */
 @media (max-width: 400px) {

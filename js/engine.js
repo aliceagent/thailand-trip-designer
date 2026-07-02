@@ -37,7 +37,7 @@ function norm(v, max) { return Math.max(0, Math.min(1, (v + max) / (max * 2))); 
 /* Budget tier from accumulated budget/luxury points */
 function budgetTier(profile) {
   const b = profile.budget + profile.luxury * 0.6;
-  if (b >= 12) return { tier: "Luxury", perDay: [350, 600], key: "luxury" };
+  if (b >= 16) return { tier: "Luxury", perDay: [350, 600], key: "luxury" };
   if (b >= 7)  return { tier: "Upscale", perDay: [200, 350], key: "upscale" };
   if (b >= 3)  return { tier: "Comfortable mid-range", perDay: [110, 200], key: "mid" };
   return { tier: "Value-savvy", perDay: [60, 110], key: "value" };
@@ -130,9 +130,12 @@ function allocateDays(chosen, totalDays) {
   return alloc;
 }
 
-/* Build a per-destination day plan drawing on its highlights */
+/* Build a per-destination day plan drawing on its highlights.
+   Evening spectacles (Muay Thai nights, shows) are kept aside and woven
+   in as after-dark plans so they never crowd out the daytime sights. */
 function buildDayPlan(dest, days, profile) {
-  const h = dest.highlights.slice();
+  const evenings = dest.highlights.filter(x => /muay thai|show/i.test(x));
+  const h = dest.highlights.filter(x => !evenings.includes(x));
   const plan = [];
   // opening day
   plan.push(`Arrive in ${dest.name}, settle in, and take a gentle first evening to find your feet${profile.romance > 4 ? " — a quiet dinner for the two of you" : ""}.`);
@@ -146,6 +149,14 @@ function buildDayPlan(dest, days, profile) {
     if (profile.relax > 5 && day % 3 === 0) line = "A slow, unstructured day — pool, rest, and wander at your own pace.";
     plan.push(line);
   }
+  // weave the evening spectacles into the middle of the leg
+  let ei = 0;
+  [2, days - 1].forEach(d => {
+    if (d >= 2 && d <= days && ei < evenings.length && plan[d - 1]) {
+      const ev = evenings[ei++];
+      plan[d - 1] = plan[d - 1].replace(/\.?$/, "") + `. In the evening: ${ev.charAt(0).toLowerCase() + ev.slice(1)}.`;
+    }
+  });
   return plan;
 }
 

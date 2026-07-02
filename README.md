@@ -13,6 +13,7 @@ Built for **Avi & Rivki Barr**, a religious Jewish couple heading to Thailand to
 - Cute, colorful, Thai-inspired design — **built to feel great on a phone**.
 - **Shareable results** — every finished quiz produces a `?trip=<code>` link (all 50 answers encoded) that opens the exact same itinerary for anyone. Copy, WhatsApp, or native-share buttons built in.
 - **Social share card** — Open Graph + Twitter meta tags with a custom 1200×630 card, so the link previews beautifully on WhatsApp, iMessage and social media.
+- **A recommended path** — every question pre-selects a "(recommended)" answer sketching our suggested trip: two full weeks, islands and water activities, resort stays, evening shows and a Muay Thai fight night. Tap through to accept, or change any answer.
 
 ## 🗂️ Structure
 
@@ -37,4 +38,4 @@ Chabad houses, kosher restaurants and minyan times in Thailand change with the s
 
 ---
 
-Made with ❤️ for Avi & Rivki Barr.
+Made with ❤️ for Avi & Rivki Barr. Created by **Jonathan Caras** using various AI tools.

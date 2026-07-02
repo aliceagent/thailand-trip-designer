@@ -28,6 +28,8 @@ const DESTINATIONS = {
       "ICONSIAM & the malls for air-conditioned luxury shopping",
       "Chatuchak Weekend Market — 15,000 stalls of everything imaginable",
       "A sunset dinner cruise on the Chao Phraya River",
+      "An electrifying Muay Thai fight night at one of Bangkok's legendary stadiums",
+      "A glittering Thai cultural show with music, dance and dazzling costumes",
     ],
     kosher: {
       level: "Excellent",
@@ -101,6 +103,8 @@ const DESTINATIONS = {
       "Big Buddha viewpoint over the island",
       "Luxurious beachfront resorts and world-class spas",
       "Sunset at Promthep Cape",
+      "Ringside seats at a Muay Thai boxing night — a true Thai spectacle",
+      "One of Phuket's famous dazzling evening shows and spectaculars",
     ],
     kosher: {
       level: "Good",
@@ -136,6 +140,7 @@ const DESTINATIONS = {
       "A boat trip to the stunning Ang Thong Marine Park",
       "Calm, palm-lined coves perfect for slow days",
       "Sunset views and beachfront dinners",
+      "A beachfront fire show under the stars after dinner",
     ],
     kosher: {
       level: "Seasonal",

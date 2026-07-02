@@ -52,6 +52,12 @@ function renderQuestion() {
   const q = QUESTIONS[i];
   const sec = sectionFor(q);
 
+  // Pre-select our recommended answer so the couple can breeze through,
+  // confirming or changing each one as they go.
+  if (!state.answers[i] && RECOMMENDED[i] !== undefined) {
+    state.answers[i] = q.options[RECOMMENDED[i]];
+  }
+
   // progress
   const answered = state.answers.filter(Boolean).length;
   const pct = Math.round(((i) / TOTAL_QUESTIONS) * 100);
@@ -76,11 +82,12 @@ function renderQuestion() {
   const opts = el("#options");
   opts.innerHTML = "";
   q.options.forEach((opt, oi) => {
+    const isRec = RECOMMENDED[i] === oi;
     const b = document.createElement("button");
     b.className = "option" + (state.answers[i] === opt ? " selected" : "");
     b.innerHTML =
       `<span class="opt-emoji">${opt.emoji || "•"}</span>` +
-      `<span class="opt-label">${opt.label}</span>` +
+      `<span class="opt-label">${opt.label}${isRec ? ' <span class="opt-rec">(recommended)</span>' : ""}</span>` +
       `<span class="opt-check">✓</span>`;
     b.addEventListener("click", () => selectOption(oi));
     opts.appendChild(b);
@@ -88,9 +95,7 @@ function renderQuestion() {
 
   // nav
   el("#nav-back").disabled = i === 0;
-  el("#nav-hint").textContent = state.answers[i]
-    ? (i === TOTAL_QUESTIONS - 1 ? "Tap again or continue →" : "Nice — moving on…")
-    : "Tap an answer to continue";
+  el("#nav-hint").textContent = "Tap your choice to continue — our pick is pre-selected";
 }
 
 function selectOption(optIndex) {
@@ -271,6 +276,7 @@ function renderResult(rec, code) {
     </div>` : ""}
 
     <button class="btn btn--emerald" id="restart-btn">↻ Start over / try different answers</button>
+    <div class="credit-card">🤖 Created by <b>Jonathan Caras</b> using various AI tools</div>
     <div class="footer">Made with ❤️ for <b>Avi &amp; Rivki Barr</b> · Your first Thailand adventure together awaits 🇹🇭</div>
   `;
 

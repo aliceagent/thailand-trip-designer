@@ -370,3 +370,34 @@ const QUESTIONS = [
 
 // Sanity: expose count for the UI
 const TOTAL_QUESTIONS = QUESTIONS.length;
+
+/* ============================================================
+   THE RECOMMENDED PATH
+   One recommended option index per question (in order). Together
+   they sketch the trip we'd suggest: two full weeks, island- and
+   water-focused, based in beautiful resorts, with evening shows,
+   a Muay Thai fight night, strictly kosher and Shabbos-aware.
+   The UI pre-selects these and tags them "(recommended)".
+   ============================================================ */
+const RECOMMENDED = [
+  // The Basics
+  3, 0, 0, 1, 0,
+  // Budget & Comfort
+  2, 2, 1, 1, 1,
+  // Kosher & Observance
+  0, 1, 2, 1, 1, 1,
+  // The Vacation Vibe
+  3, 1, 1, 1, 0,
+  // Nature & Outdoors
+  1, 2, 1, 2, 1,
+  // Culture & Sightseeing
+  1, 1, 1, 1, 0,
+  // Beaches & Water
+  0, 0, 0, 1,
+  // Food & Flavors
+  1, 0, 0, 0,
+  // Wellness & Pace
+  1, 1, 0, 2,
+  // Just the Two of You
+  0, 0, 1, 0, 1, 1, 0,
+];
