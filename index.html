@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0B6E4F" />
+  <title>Avi Barr's Thailand Trip Designer 🇹🇭</title>
+  <meta name="description" content="A fun, comprehensive questionnaire that designs your perfect kosher-friendly Thailand vacation — by Avi Barr." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛕</text></svg>" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ============ WELCOME ============ -->
+    <section id="screen-welcome" class="screen active">
+      <div class="hero">
+        <div class="hero__img"></div>
+        <div class="hero__content">
+          <span class="hero__badge">Designed just for you two</span>
+          <div class="hero__flag">🇹🇭</div>
+          <h1>Your Perfect <span class="accent">Thailand</span> Vacation Awaits</h1>
+          <p class="hero__sub">A fun little journey of 50 questions — and a fully custom, kosher-friendly itinerary at the end.</p>
+        </div>
+      </div>
+
+      <div class="avi-card">
+        <div class="avi-avatar">🧑‍✈️</div>
+        <p>Hi, I'm <b>Avi Barr</b> — your personal Thailand trip designer. Answer 50 quick, fun questions and I'll craft a vacation made just for you and your wife. 🌏</p>
+      </div>
+
+      <ul class="intro-points">
+        <li><span class="ip-emoji">📱</span> 50 easy multiple-choice questions — perfect on your phone</li>
+        <li><span class="ip-emoji">✡️</span> Kosher food & shul locations built into every stop</li>
+        <li><span class="ip-emoji">🗺️</span> A day-by-day itinerary matched to your budget & style</li>
+        <li><span class="ip-emoji">⏱️</span> Takes about 4 minutes — and it's genuinely fun</li>
+      </ul>
+
+      <button class="btn" id="start-btn">Let's design our trip →</button>
+      <div class="footer">First time in Thailand? You're in wonderful hands. 🐘🏝️🛕</div>
+    </section>
+
+    <!-- ============ QUIZ ============ -->
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-top">
+        <div class="progress-row">
+          <span class="progress-label" id="progress-label">0 answered</span>
+          <span class="progress-count" id="progress-count">Question 1 of 50</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="section-chip" id="section-chip"></div>
+      </div>
+
+      <div class="q-card" id="q-card">
+        <div class="q-emoji" id="q-emoji">🧳</div>
+        <div class="q-text" id="q-text"></div>
+        <div class="q-hint" id="q-hint"></div>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-back" id="nav-back">← Back</button>
+        <span class="nav-hint" id="nav-hint">Tap an answer to continue</span>
+      </div>
+    </section>
+
+    <!-- ============ LOADING ============ -->
+    <section id="screen-loading" class="screen">
+      <div class="loading">
+        <div class="spinner"></div>
+        <h2>Building your dream trip…</h2>
+        <p id="loading-line">Reading all 50 of your answers…</p>
+      </div>
+    </section>
+
+    <!-- ============ RESULT ============ -->
+    <section id="screen-result" class="screen">
+      <div id="result-content"></div>
+    </section>
+
+  </div>
+
+  <!-- data + logic -->
+  <script src="js/questions.js"></script>
+  <script src="js/destinations.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "thailand-quiz",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/Users/jonathancaras/Documents/Claude Code/thailand-quiz"],
+      "port": 4321
+    }
+  ]
+}
