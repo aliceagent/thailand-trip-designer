@@ -6,6 +6,23 @@ const state = {
   index: 0,               // current question index
   answers: new Array(TOTAL_QUESTIONS).fill(null),
 };
+let sharedView = false;   // true when viewing a trip opened from a shared link
+
+/* ---------- Shareable links ----------
+   Every answer is an option index (0-3), so a full quiz encodes to a
+   50-digit string. `?trip=<code>` reproduces the exact itinerary. */
+function answersToCode(answers) {
+  const digits = answers.map((a, i) => QUESTIONS[i].options.indexOf(a));
+  return digits.some(d => d < 0) ? null : digits.join("");
+}
+function codeToAnswers(code) {
+  if (typeof code !== "string" || code.length !== TOTAL_QUESTIONS) return null;
+  const answers = [...code].map((c, i) => QUESTIONS[i].options[+c]);
+  return answers.some(a => !a) ? null : answers;
+}
+function shareUrl(code) {
+  return location.origin + location.pathname + "?trip=" + code;
+}
 
 const el = (sel) => document.querySelector(sel);
 const screens = {
@@ -124,7 +141,9 @@ function finish() {
   setTimeout(() => {
     clearInterval(timer);
     const rec = generateRecommendation(state.answers);
-    renderResult(rec);
+    const code = answersToCode(state.answers);
+    if (code) history.replaceState(null, "", "?trip=" + code); // URL bar is instantly shareable
+    renderResult(rec, code);
     show("result");
   }, LOADING_LINES.length * 620 + 300);
 }
@@ -132,9 +151,12 @@ function finish() {
 /* ---------- Render the full itinerary ---------- */
 function fmtMoney(n) { return "$" + n.toLocaleString("en-US"); }
 
-function renderResult(rec) {
+function renderResult(rec, code) {
   const root = el("#result-content");
   const placeNames = rec.legs.map(l => l.destination.name).join(" → ");
+  if (code === undefined) code = answersToCode(state.answers);
+  const link = code ? shareUrl(code) : null;
+  const shareText = `🇹🇭 Check out our custom Thailand trip plan — ${rec.meta.tripLength} days: ${placeNames}!`;
 
   // note (light markdown: *word* -> em)
   const noteHtml = rec.note
@@ -190,6 +212,11 @@ function renderResult(rec) {
   }).join("");
 
   root.innerHTML = `
+    ${sharedView ? `
+    <div class="shared-banner">
+      <span>💌 A custom Thailand trip plan was shared with you!</span>
+      <button id="design-own-btn">✨ Design your own</button>
+    </div>` : ""}
     <div class="result-hero">
       <div class="tada">🎉🇹🇭</div>
       <h2>Avi &amp; Rivki, Your Thailand Journey is Ready!</h2>
@@ -229,6 +256,20 @@ function renderResult(rec) {
       Please confirm current hours and Shabbos details directly with each Chabad before you travel — they're wonderfully welcoming and happy to help.
     </div>
 
+    ${link ? `
+    <div class="panel share-panel">
+      <h3>📤 Share this trip</h3>
+      <p class="share-sub">Send this exact itinerary to Rivki, family or friends — the link opens the full plan, answers and all.</p>
+      <div class="share-link-row">
+        <input id="share-url" readonly value="${link}" />
+        <button id="copy-btn">Copy</button>
+      </div>
+      <div class="share-btns">
+        <button class="share-chip share-chip--wa" id="wa-btn">💬 WhatsApp</button>
+        <button class="share-chip" id="native-share-btn">📱 Share…</button>
+      </div>
+    </div>` : ""}
+
     <button class="btn btn--emerald" id="restart-btn">↻ Start over / try different answers</button>
     <div class="footer">Made with ❤️ for <b>Avi &amp; Rivki Barr</b> · Your first Thailand adventure together awaits 🇹🇭</div>
   `;
@@ -243,6 +284,78 @@ function renderResult(rec) {
   el("#restart-btn").addEventListener("click", () => {
     state.index = 0;
     state.answers = new Array(TOTAL_QUESTIONS).fill(null);
+    sharedView = false;
+    history.replaceState(null, "", location.pathname);
     show("welcome");
   });
+
+  const ownBtn = el("#design-own-btn");
+  if (ownBtn) ownBtn.addEventListener("click", () => {
+    state.index = 0;
+    state.answers = new Array(TOTAL_QUESTIONS).fill(null);
+    sharedView = false;
+    history.replaceState(null, "", location.pathname);
+    show("welcome");
+  });
+
+  if (link) {
+    el("#copy-btn").addEventListener("click", () => copyLink(link));
+    el("#share-url").addEventListener("click", (e) => e.target.select());
+    el("#wa-btn").addEventListener("click", () => {
+      window.open("https://wa.me/?text=" + encodeURIComponent(shareText + "\n" + link), "_blank");
+    });
+    const nativeBtn = el("#native-share-btn");
+    if (navigator.share) {
+      nativeBtn.addEventListener("click", () => {
+        navigator.share({ title: "Our Thailand Trip Plan 🇹🇭", text: shareText, url: link }).catch(() => {});
+      });
+    } else {
+      nativeBtn.style.display = "none";
+    }
+  }
 }
+
+/* ---------- Copy helper + toast ---------- */
+function copyLink(link) {
+  const done = () => toast("Link copied! 🎉 Send it to anyone");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).then(done).catch(() => legacyCopy(link, done));
+  } else {
+    legacyCopy(link, done);
+  }
+}
+function legacyCopy(link, done) {
+  const input = el("#share-url");
+  input.select(); input.setSelectionRange(0, 99999);
+  try { document.execCommand("copy"); done(); }
+  catch (e) { toast("Long-press the link to copy it"); }
+}
+let toastTimer = null;
+function toast(msg) {
+  let t = el("#toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ---------- Open a shared trip link ---------- */
+(function initFromUrl() {
+  const code = new URLSearchParams(location.search).get("trip");
+  const answers = codeToAnswers(code);
+  if (!answers) return;
+  state.answers = answers;
+  sharedView = true;
+  show("loading");
+  el("#loading-line").textContent = "Unwrapping a shared trip plan… 💌";
+  setTimeout(() => {
+    const rec = generateRecommendation(answers);
+    renderResult(rec, code);
+    show("result");
+  }, 900);
+})();

@@ -11,6 +11,8 @@ Built for **Avi & Rivki Barr**, a religious Jewish couple heading to Thailand to
 - Every stop includes **kosher food guidance** and **synagogue / Chabad locations** for Shabbos.
 - A warm, **personalized note addressed to Avi & Rivki**, a travel-style breakdown, and a budget snapshot.
 - Cute, colorful, Thai-inspired design — **built to feel great on a phone**.
+- **Shareable results** — every finished quiz produces a `?trip=<code>` link (all 50 answers encoded) that opens the exact same itinerary for anyone. Copy, WhatsApp, or native-share buttons built in.
+- **Social share card** — Open Graph + Twitter meta tags with a custom 1200×630 card, so the link previews beautifully on WhatsApp, iMessage and social media.
 
 ## 🗂️ Structure
 
