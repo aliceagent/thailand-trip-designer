@@ -66,7 +66,7 @@ const QUESTIONS = [
     options: [
       { label: "Clean, simple and cheap is perfect", emoji: "🛏️", scores: { budget: 1 } },
       { label: "Comfortable mid-range with a nice pool", emoji: "🏊", scores: { budget: 2 } },
-      { label: "Four-star, breakfast included, no surprises", emoji: "🍳", scores: { budget: 3, luxury: 1 } },
+      { label: "Four-star comfort, no surprises", emoji: "⭐", scores: { budget: 3, luxury: 1 } },
       { label: "Five-star luxury — this is a special trip", emoji: "🥂", scores: { budget: 4, luxury: 3 } },
     ] },
   { section: "budget", emoji: "💵", text: "What's your comfortable total budget for the two of you (flights aside)?",
@@ -76,10 +76,10 @@ const QUESTIONS = [
       { label: "Generous — $4,500 to $8,000", emoji: "💎", scores: { budget: 3, luxury: 1 } },
       { label: "The sky's the limit — over $8,000", emoji: "🌟", scores: { budget: 4, luxury: 2 } },
     ] },
-  { section: "budget", emoji: "🍷", text: "When it comes to dining out, you'd rather…",
+  { section: "budget", emoji: "🍷", text: "When it comes to kosher dining (Chabad restaurants and the like), you'd rather…",
     options: [
       { label: "Keep it simple and stretch every dollar", emoji: "🥙", scores: { budget: 1 } },
-      { label: "A nice sit-down dinner most nights", emoji: "🍲", scores: { budget: 2, food: 1 } },
+      { label: "A nice sit-down kosher dinner most nights", emoji: "🍲", scores: { budget: 2, food: 1 } },
       { label: "Treat ourselves — the best kosher table in town", emoji: "🍾", scores: { budget: 3, food: 2, luxury: 1 } },
     ] },
   { section: "budget", emoji: "🛎️", text: "Which of these would you happily pay extra for?",
@@ -122,7 +122,7 @@ const QUESTIONS = [
   { section: "kosher", emoji: "🧼", text: "How do you feel about a kitchenette in your room?",
     options: [
       { label: "Must-have — we'll prepare our own food", emoji: "🍳", scores: { kosherStrict: 2, budget: 1 } },
-      { label: "Handy for breakfast and Shabbos prep", emoji: "☕", scores: { kosherStrict: 1 } },
+      { label: "Handy for making our own breakfasts and Shabbos prep", emoji: "☕", scores: { kosherStrict: 1 } },
       { label: "Not needed if kosher food is nearby", emoji: "📍", scores: { observance: 1 } },
       { label: "We'd rather eat out every meal", emoji: "🍴", scores: { food: 2, budget: 2 } },
     ] },
@@ -262,7 +262,7 @@ const QUESTIONS = [
     ] },
   { section: "beach", emoji: "🏝️", text: "Your ideal beach scene is…",
     options: [
-      { label: "Lively, with beach clubs and cafés", emoji: "🎶", scores: { beach: 1, city: 1, crowds: 1 } },
+      { label: "Lively, with music and a buzzing beachfront", emoji: "🎶", scores: { beach: 1, city: 1, crowds: 1 } },
       { label: "Postcard-perfect and peaceful", emoji: "🌅", scores: { beach: 2, relax: 1, romance: 1 } },
       { label: "Remote and untouched, if we can reach it", emoji: "🧭", scores: { beach: 1, adventure: 2, crowds: -1 } },
     ] },
@@ -286,7 +286,7 @@ const QUESTIONS = [
       { label: "A mix of eating out and Shabbos cooking", emoji: "🍳", scores: { food: 1 } },
       { label: "We're happy self-catering to keep it simple", emoji: "🥫", scores: { budget: 1, adventure: 1 } },
     ] },
-  { section: "food", emoji: "☕", text: "A slow café morning with good coffee and a view?",
+  { section: "food", emoji: "☕", text: "A slow morning — good coffee, your own kosher breakfast, and a beautiful view?",
     options: [
       { label: "Our favorite way to start the day", emoji: "🥐", scores: { relax: 2, romance: 1 } },
       { label: "Nice sometimes", emoji: "☕", scores: { relax: 1 } },

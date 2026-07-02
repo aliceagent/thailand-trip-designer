@@ -27,7 +27,7 @@ const DESTINATIONS = {
       "A longtail boat through the old khlongs (canals) of Thonburi",
       "ICONSIAM & the malls for air-conditioned luxury shopping",
       "Chatuchak Weekend Market — 15,000 stalls of everything imaginable",
-      "A sunset dinner cruise on the Chao Phraya River",
+      "A sunset cruise on the Chao Phraya River as the temples light up",
       "An electrifying Muay Thai fight night at one of Bangkok's legendary stadiums",
       "A glittering Thai cultural show with music, dance and dazzling costumes",
     ],
@@ -139,7 +139,7 @@ const DESTINATIONS = {
       "World-renowned wellness and spa resorts",
       "A boat trip to the stunning Ang Thong Marine Park",
       "Calm, palm-lined coves perfect for slow days",
-      "Sunset views and beachfront dinners",
+      "Sunset views and romantic evenings on the beach",
       "A beachfront fire show under the stars after dinner",
     ],
     kosher: {
