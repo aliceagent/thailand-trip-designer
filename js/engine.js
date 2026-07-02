@@ -2,7 +2,7 @@
    THE RECOMMENDATION ENGINE
    Turns 50 answers into: a traveler profile, a set of matched
    destinations, a day-by-day itinerary, a budget estimate, and
-   a warm personal note "from Avi Barr".
+   a warm personal note addressed to Avi & Rivki.
    ============================================================ */
 
 const DIMENSIONS = [
@@ -178,7 +178,7 @@ function topThemes(profile) {
     .slice(0, 4);
 }
 
-/* A warm, personalized note "from Avi Barr" */
+/* A warm note addressed to Avi & Rivki from their trip designer */
 function aviNote(profile, meta, chosen) {
   const places = chosen.map(c => c.d.name);
   const placeList =
@@ -191,12 +191,12 @@ function aviNote(profile, meta, chosen) {
   if (profile.romance >= 5) styleBits.push("enjoy real quality time, just the two of you");
   if (profile.food >= 5) styleBits.push("eat wonderfully well — kosher and all");
 
-  return `Shalom! It's Avi Barr here. 🌏\n\n` +
+  return `Shalom, Avi & Rivki! 🌏\n\n` +
     `I read every one of your ${TOTAL_QUESTIONS} answers, and I have to say — you two are going to *love* Thailand. ` +
     `Based on everything you told me, I've built you a ${meta.tripLength}-day journey through ${placeList}, ` +
     `designed so you can ${styleBits.join(", ")}.\n\n` +
-    `Everything below keeps kosher and Shabbos front-and-center, so you can relax and just enjoy each other and this magical country. ` +
-    `Wishing you an unforgettable first trip — nesiah tovah!\n\n— Avi`;
+    `Everything below keeps kosher and Shabbos front-and-center, so the two of you can relax and just enjoy each other and this magical country. ` +
+    `Wishing you an unforgettable first trip together — nesiah tovah!\n\n— Your Thailand trip designer`;
 }
 
 /* MAIN: produce the full recommendation object */

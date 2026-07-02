@@ -108,7 +108,7 @@ const LOADING_LINES = [
   "Checking kosher restaurants & Chabad houses…",
   "Locating the closest shuls for Shabbos…",
   "Balancing your budget and your dream days…",
-  "Avi is putting the finishing touches on it…",
+  "Putting the finishing touches on it…",
 ];
 
 function finish() {
@@ -192,14 +192,14 @@ function renderResult(rec) {
   root.innerHTML = `
     <div class="result-hero">
       <div class="tada">🎉🇹🇭</div>
-      <h2>Your Thailand Journey is Ready!</h2>
+      <h2>Avi &amp; Rivki, Your Thailand Journey is Ready!</h2>
       <p>${rec.meta.tripLength} days · ${placeNames}</p>
     </div>
 
     <div class="note-card">
       <div class="note-head">
         <div class="avi-avatar">🧑‍✈️</div>
-        <div><b>A note from Avi Barr</b><span>Your personal Thailand trip designer</span></div>
+        <div><b>A note for Avi &amp; Rivki</b><span>From your personal Thailand trip designer</span></div>
       </div>
       <div class="note-body">${noteHtml}</div>
     </div>
@@ -225,12 +225,12 @@ function renderResult(rec) {
     ${legsHtml}
 
     <div class="disclaimer">
-      💡 <b>A quick note from Avi:</b> Chabad houses, kosher restaurants and minyan times in Thailand can change with the season.
+      💡 <b>A quick note:</b> Chabad houses, kosher restaurants and minyan times in Thailand can change with the season.
       Please confirm current hours and Shabbos details directly with each Chabad before you travel — they're wonderfully welcoming and happy to help.
     </div>
 
     <button class="btn btn--emerald" id="restart-btn">↻ Start over / try different answers</button>
-    <div class="footer">Made with ❤️ by <b>Avi Barr</b> · Your first Thailand adventure awaits 🇹🇭</div>
+    <div class="footer">Made with ❤️ for <b>Avi &amp; Rivki Barr</b> · Your first Thailand adventure together awaits 🇹🇭</div>
   `;
 
   // animate bars in

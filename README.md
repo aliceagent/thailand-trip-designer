@@ -1,15 +1,15 @@
-# 🇹🇭 Avi Barr's Thailand Trip Designer
+# 🇹🇭 Avi & Rivki's Thailand Trip Designer
 
 A fun, mobile-first questionnaire that asks a couple **50 thematic multiple-choice questions** about how they like to travel — budget, pace, kosher needs, Shabbos observance, beaches vs. mountains, food, romance and more — and then generates a **fully customized, kosher-friendly Thailand itinerary**.
 
-Built for a religious Jewish couple heading to Thailand for the first time. Hosted by **Avi Barr**, their personal trip designer.
+Built for **Avi & Rivki Barr**, a religious Jewish couple heading to Thailand together for the first time.
 
 ## ✨ What it does
 
 - **50 themed questions** across 10 sections (The Basics, Budget & Comfort, Kosher & Observance, The Vacation Vibe, Nature, Culture, Beaches, Food, Wellness, and Just the Two of You).
 - A **recommendation engine** scores answers against five real Thai destinations and builds a **day-by-day itinerary**, matched to trip length, pace and budget.
 - Every stop includes **kosher food guidance** and **synagogue / Chabad locations** for Shabbos.
-- A warm, **personalized note "from Avi Barr"**, a travel-style breakdown, and a budget snapshot.
+- A warm, **personalized note addressed to Avi & Rivki**, a travel-style breakdown, and a budget snapshot.
 - Cute, colorful, Thai-inspired design — **built to feel great on a phone**.
 
 ## 🗂️ Structure
@@ -35,4 +35,4 @@ Chabad houses, kosher restaurants and minyan times in Thailand change with the s
 
 ---
 
-Made with ❤️ by Avi Barr.
+Made with ❤️ for Avi & Rivki Barr.

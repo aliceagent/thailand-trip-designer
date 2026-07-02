@@ -20,7 +20,7 @@ const SECTIONS = [
   { id: "beach",     title: "Beaches & Water",       emoji: "🏝️", blurb: "The islands are calling. How loud?" },
   { id: "food",      title: "Food & Flavors",        emoji: "🍜", blurb: "Even kosher travelers eat like kings in Thailand." },
   { id: "wellness",  title: "Wellness & Pace",       emoji: "💆", blurb: "Spa days, rest, and how full you like the calendar." },
-  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for you and your wife." },
+  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for Avi & Rivki." },
 ];
 
 const QUESTIONS = [
@@ -341,7 +341,7 @@ const QUESTIONS = [
       { label: "A loose outline, room to wander", emoji: "🧭", scores: { adventure: 1 } },
       { label: "Just tell us where to be and when", emoji: "🛎️", scores: { luxury: 1, relax: 1 } },
     ] },
-  { section: "together", emoji: "🎁", text: "Which surprise would delight your wife the most?",
+  { section: "together", emoji: "🎁", text: "Avi — which surprise would delight Rivki the most?",
     options: [
       { label: "Flowers and a beachfront table under the stars", emoji: "🌹", scores: { romance: 2, beach: 1 } },
       { label: "A pampering spa day", emoji: "🌺", scores: { wellness: 2, relax: 1 } },
