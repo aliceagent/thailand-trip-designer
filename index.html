@@ -5,27 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0B6E4F" />
   <title>Avi &amp; Rivki's Thailand Trip Designer 🇹🇭</title>
-  <meta name="description" content="A fun, comprehensive questionnaire that designs Avi & Rivki Barr's perfect kosher-friendly Thailand vacation." />
+  <meta name="description" content="A fun, comprehensive questionnaire that designs your perfect kosher-friendly Thailand vacation." />
 
   <!-- Social share card (Open Graph — used by WhatsApp, Facebook, LinkedIn, iMessage…) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Thailand Trip Designer" />
-  <meta property="og:title" content="Avi & Rivki's Thailand Trip Designer 🇹🇭" />
-  <meta property="og:description" content="50 fun questions → a fully custom, kosher-friendly Thailand itinerary. Come see the dream trip!" />
+  <meta property="og:title" content="Your Thailand Trip Designer 🇹🇭" />
+  <meta property="og:description" content="A fun questionnaire → a fully custom, kosher-friendly Thailand itinerary. Come see the dream trip!" />
   <meta property="og:url" content="https://thailand-quiz.vercel.app/" />
   <meta property="og:image" content="https://thailand-quiz.vercel.app/assets/og-card.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Avi & Rivki's Thailand Trip Designer — 50 fun questions, one custom kosher-friendly itinerary" />
+  <meta property="og:image:alt" content="Thailand Trip Designer — a fun quiz, one custom kosher-friendly itinerary" />
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Avi & Rivki's Thailand Trip Designer 🇹🇭" />
-  <meta name="twitter:description" content="50 fun questions → a fully custom, kosher-friendly Thailand itinerary." />
+  <meta name="twitter:title" content="Your Thailand Trip Designer 🇹🇭" />
+  <meta name="twitter:description" content="A fun questionnaire → a fully custom, kosher-friendly Thailand itinerary." />
   <meta name="twitter:image" content="https://thailand-quiz.vercel.app/assets/og-card.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 </head>
@@ -37,20 +37,20 @@
       <div class="hero">
         <div class="hero__img"></div>
         <div class="hero__content">
-          <span class="hero__badge">Designed just for Avi &amp; Rivki</span>
+          <span class="hero__badge">Designed just for <span data-names="both">Avi &amp; Rivki</span></span>
           <div class="hero__flag">🇹🇭</div>
-          <h1>Avi &amp; Rivki, Your Perfect <span class="accent">Thailand</span> Vacation Awaits</h1>
-          <p class="hero__sub">A fun little journey of 50 questions — and a fully custom, kosher-friendly itinerary built for the two of you.</p>
+          <h1><span data-names="both">Avi &amp; Rivki</span>, Your Perfect <span class="accent">Thailand</span> Vacation Awaits</h1>
+          <p class="hero__sub">A fun little journey of <span data-qcount>50</span> quick questions — and a fully custom, kosher-friendly itinerary built for the two of you.</p>
         </div>
       </div>
 
       <div class="avi-card">
         <div class="avi-avatar">🧑‍✈️</div>
-        <p>Welcome, <b>Avi &amp; Rivki Barr</b>! Answer 50 quick, fun questions together and your personal trip designer will craft a Thailand vacation made just for the two of you. 🌏</p>
+        <p>Welcome, <b data-names="welcome">Avi &amp; Rivki Barr</b>! Answer <span data-qcount>50</span> quick, fun questions together and your personal trip designer will craft a Thailand vacation made just for the two of you. 🌏</p>
       </div>
 
       <ul class="intro-points">
-        <li><span class="ip-emoji">📱</span> 50 easy multiple-choice questions — perfect on your phone</li>
+        <li><span class="ip-emoji">📱</span> <span data-qcount>50</span> easy multiple-choice questions — perfect on your phone</li>
         <li><span class="ip-emoji">✡️</span> Kosher food & shul locations built into every stop</li>
         <li><span class="ip-emoji">🗺️</span> A day-by-day itinerary matched to your budget & style</li>
         <li><span class="ip-emoji">⏱️</span> Takes about 4 minutes — and it's genuinely fun</li>
@@ -75,6 +75,7 @@
       </div>
 
       <div class="q-card" id="q-card">
+        <div class="q-image" id="q-image" hidden></div>
         <div class="q-emoji" id="q-emoji">🧳</div>
         <div class="q-text" id="q-text"></div>
         <div class="q-hint" id="q-hint"></div>
@@ -106,9 +107,9 @@
   </div>
 
   <!-- data + logic -->
-  <script src="js/questions.js"></script>
-  <script src="js/destinations.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/questions.js?v=5"></script>
+  <script src="js/destinations.js?v=5"></script>
+  <script src="js/engine.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
 </body>
 </html>

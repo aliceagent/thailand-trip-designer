@@ -8,6 +8,41 @@ const state = {
 };
 let sharedView = false;   // true when viewing a trip opened from a shared link
 
+/* ---------- Personalization ----------
+   The couple's names come from the URL — ?n1=Avi&n2=Rivki — so the
+   same site can be sent to any couple by just editing the link.
+   Names are length-capped and always HTML-escaped before injection. */
+function cleanName(v, fallback) {
+  if (!v) return fallback;
+  const s = v.trim().slice(0, 24);
+  return s || fallback;
+}
+const URL_PARAMS = new URLSearchParams(location.search);
+const COUPLE = (() => {
+  const n1 = cleanName(URL_PARAMS.get("n1"), "Avi");
+  const n2 = cleanName(URL_PARAMS.get("n2"), "Rivki");
+  const custom = URL_PARAMS.has("n1") || URL_PARAMS.has("n2");
+  return { n1, n2, both: `${n1} & ${n2}`, custom };
+})();
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+/* Replace {n1}/{n2} placeholders in question text (plain text contexts) */
+function personalize(str) {
+  return str.replace(/\{n1\}/g, COUPLE.n1).replace(/\{n2\}/g, COUPLE.n2);
+}
+/* Fill every element marked with a data-names role on the static page */
+function applyNames() {
+  const both = COUPLE.both;
+  const welcomeName = COUPLE.custom ? both : "Avi & Rivki Barr";
+  document.querySelectorAll("[data-names]").forEach(elm => {
+    elm.textContent = elm.dataset.names === "welcome" ? welcomeName : both;
+  });
+  document.querySelectorAll("[data-qcount]").forEach(elm => { elm.textContent = TOTAL_QUESTIONS; });
+  document.title = `${both}'s Thailand Trip Designer 🇹🇭`;
+}
+applyNames();
+
 /* ---------- Shareable links ----------
    Single-choice answers encode as their option index (0-3); multi-select
    answers encode as a base36 bitmask of the chosen options (supports up
@@ -45,7 +80,11 @@ function codeToAnswers(code) {
   return answers.some(a => a === null) ? null : answers;
 }
 function shareUrl(code) {
-  return location.origin + location.pathname + "?trip=" + code;
+  let url = location.origin + location.pathname + "?trip=" + code;
+  if (COUPLE.custom) {
+    url += "&n1=" + encodeURIComponent(COUPLE.n1) + "&n2=" + encodeURIComponent(COUPLE.n2);
+  }
+  return url;
 }
 
 const el = (sel) => document.querySelector(sel);
@@ -70,6 +109,12 @@ el("#start-btn").addEventListener("click", () => {
 
 /* ---------- Quiz ---------- */
 function sectionFor(q) { return SECTIONS.find(s => s.id === q.section); }
+
+/* Query string that preserves the couple's names (for restarts etc.) */
+function namesQuery(lead) {
+  if (!COUPLE.custom) return "";
+  return lead + "n1=" + encodeURIComponent(COUPLE.n1) + "&n2=" + encodeURIComponent(COUPLE.n2);
+}
 
 function renderQuestion() {
   const i = state.index;
@@ -101,9 +146,18 @@ function renderQuestion() {
   void card.offsetWidth;
   card.style.animation = "fadeUp .38s ease both";
 
+  // section photo banner
+  const qImage = el("#q-image");
+  if (sec.image) {
+    qImage.hidden = false;
+    qImage.style.backgroundImage = `url('${sec.image}')`;
+  } else {
+    qImage.hidden = true;
+  }
+
   el("#q-emoji").textContent = q.emoji;
-  el("#q-text").textContent = q.text;
-  el("#q-hint").textContent = q.multi ? "Select all that apply, then tap Next" : sec.blurb;
+  el("#q-text").textContent = personalize(q.text);
+  el("#q-hint").textContent = q.multi ? "Select all that apply, then tap Next" : personalize(sec.blurb);
 
   // optional "good to know" info box above the options
   const infoBox = el("#q-info");
@@ -184,7 +238,7 @@ el("#nav-back").addEventListener("click", () => {
 
 /* ---------- Finish → loading → result ---------- */
 const LOADING_LINES = [
-  "Reading all 50 of your answers…",
+  `Reading all ${TOTAL_QUESTIONS} of your answers…`,
   "Matching you to the perfect Thai cities…",
   "Checking kosher restaurants & Chabad houses…",
   "Locating the closest shuls for Shabbos…",
@@ -206,7 +260,7 @@ function finish() {
     clearInterval(timer);
     const rec = generateRecommendation(state.answers);
     const code = answersToCode(state.answers);
-    if (code) history.replaceState(null, "", "?trip=" + code); // URL bar is instantly shareable
+    if (code) history.replaceState(null, "", "?trip=" + code + namesQuery("&")); // URL bar is instantly shareable
     renderResult(rec, code);
     show("result");
   }, LOADING_LINES.length * 620 + 300);
@@ -309,14 +363,14 @@ function renderResult(rec, code) {
     </div>` : ""}
     <div class="result-hero">
       <div class="tada">🎉🇹🇭</div>
-      <h2>Avi &amp; Rivki, Your Thailand Journey is Ready!</h2>
+      <h2>${esc(COUPLE.both)}, Your Thailand Journey is Ready!</h2>
       <p>${rec.meta.tripLength} days · ${placeNames}</p>
     </div>
 
     <div class="note-card">
       <div class="note-head">
         <div class="avi-avatar">🧑‍✈️</div>
-        <div><b>A note for Avi &amp; Rivki</b><span>From your personal Thailand trip designer</span></div>
+        <div><b>A note for ${esc(COUPLE.both)}</b><span>From your personal Thailand trip designer</span></div>
       </div>
       <div class="note-body">${noteHtml}</div>
     </div>
@@ -382,7 +436,7 @@ function renderResult(rec, code) {
     ${link ? `
     <div class="panel share-panel">
       <h3>📤 Share this trip</h3>
-      <p class="share-sub">Send this exact itinerary to Rivki, family or friends — the link opens the full plan, answers and all.</p>
+      <p class="share-sub">Send this exact itinerary to ${esc(COUPLE.n2)}, family or friends — the link opens the full plan, answers and all.</p>
       <div class="share-link-row">
         <input id="share-url" readonly value="${link}" />
         <button id="copy-btn">Copy</button>
@@ -395,7 +449,7 @@ function renderResult(rec, code) {
 
     <button class="btn btn--emerald" id="restart-btn">↻ Start over / try different answers</button>
     <div class="credit-card">🤖 Created by <b>Jonathan Caras</b> using various AI tools</div>
-    <div class="footer">Made with ❤️ for <b>Avi &amp; Rivki Barr</b> · Your first Thailand adventure together awaits 🇹🇭</div>
+    <div class="footer">Made with ❤️ for <b>${esc(COUPLE.custom ? COUPLE.both : "Avi & Rivki Barr")}</b> · Your first Thailand adventure together awaits 🇹🇭</div>
   `;
 
   // animate bars in
@@ -409,7 +463,7 @@ function renderResult(rec, code) {
     state.index = 0;
     state.answers = new Array(TOTAL_QUESTIONS).fill(null);
     sharedView = false;
-    history.replaceState(null, "", location.pathname);
+    history.replaceState(null, "", location.pathname + namesQuery("?"));
     show("welcome");
   });
 
@@ -418,7 +472,7 @@ function renderResult(rec, code) {
     state.index = 0;
     state.answers = new Array(TOTAL_QUESTIONS).fill(null);
     sharedView = false;
-    history.replaceState(null, "", location.pathname);
+    history.replaceState(null, "", location.pathname + namesQuery("?"));
     show("welcome");
   });
 

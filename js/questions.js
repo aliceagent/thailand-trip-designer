@@ -1,26 +1,42 @@
 /* ============================================================
-   THE 50 QUESTIONS
-   Organized into 10 themed sections. Each option carries a
-   `scores` object that feeds the recommendation engine
-   (see js/engine.js). Dimensions used:
+   THE QUESTIONS
+   Organized into 10 themed sections, trimmed so nothing feels
+   repetitive. Each option carries a `scores` object that feeds
+   the recommendation engine (see js/engine.js). Dimensions:
      budget, luxury, pace, adventure, relax, culture, nature,
      beach, city, food, wellness, shopping, romance, crowds,
      kosherStrict, observance, heat, nightlife
-   Two special questions set `meta` values directly:
-     q1 -> tripLength (days),  q6 -> partyMonth (season)
+   Special fields:
+     meta         -> sets trip facts directly (q1: tripLength)
+     multi: true  -> select-all-that-apply (advance via Next)
+     info         -> a "good to know" education box on the card
+     {n1} / {n2}  -> replaced with the couple's names at render
+   Each section has an `image` shown on its question cards —
+   every URL visually verified (Unsplash IDs rot into random
+   photos, so never trust an ID without looking at it).
    ============================================================ */
 
 const SECTIONS = [
-  { id: "basics",    title: "The Basics",            emoji: "🧳", blurb: "First, the big-picture shape of your trip." },
-  { id: "budget",    title: "Budget & Comfort",      emoji: "💰", blurb: "How you like to travel — and what feels right to spend." },
-  { id: "kosher",    title: "Kosher & Observance",   emoji: "✡️", blurb: "So your itinerary keeps Shabbos and your kitchen in mind." },
-  { id: "vibe",      title: "The Vacation Vibe",     emoji: "🌈", blurb: "Adventure seekers or slow-and-easy? Let's find out." },
-  { id: "nature",    title: "Nature & Outdoors",     emoji: "🌿", blurb: "Mountains, jungles, elephants and open sky." },
-  { id: "culture",   title: "Culture & Sightseeing", emoji: "🏮", blurb: "Markets, shows, shopping and local color." },
-  { id: "beach",     title: "Beaches & Water",       emoji: "🏝️", blurb: "The islands are calling. How loud?" },
-  { id: "food",      title: "Food & Flavors",        emoji: "🍜", blurb: "Even kosher travelers eat like kings in Thailand." },
-  { id: "wellness",  title: "Wellness & Pace",       emoji: "💆", blurb: "Spa days, rest, and how full you like the calendar." },
-  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for Avi & Rivki." },
+  { id: "basics",    title: "The Basics",            emoji: "🧳", blurb: "First, the big-picture shape of your trip.",
+    image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=70" },
+  { id: "budget",    title: "Budget & Comfort",      emoji: "💰", blurb: "How you like to travel — and what feels right to spend.",
+    image: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=800&q=70" },
+  { id: "kosher",    title: "Kosher & Observance",   emoji: "✡️", blurb: "So your itinerary keeps Shabbos and your kitchen in mind.",
+    image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=70" },
+  { id: "vibe",      title: "The Vacation Vibe",     emoji: "🌈", blurb: "Adventure seekers or slow-and-easy? Let's find out.",
+    image: "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=800&q=70" },
+  { id: "nature",    title: "Nature & Outdoors",     emoji: "🌿", blurb: "Elephants, jungles, waterfalls and open sky.",
+    image: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?auto=format&fit=crop&w=800&q=70" },
+  { id: "culture",   title: "Culture & Sightseeing", emoji: "🏮", blurb: "Markets, shows, shopping and local color.",
+    image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=70" },
+  { id: "beach",     title: "Beaches & Water",       emoji: "🏝️", blurb: "The islands are calling. How loud?",
+    image: "https://images.unsplash.com/photo-1537956965359-7573183d1f57?auto=format&fit=crop&w=800&q=70" },
+  { id: "food",      title: "Food & Flavors",        emoji: "🍜", blurb: "Even kosher travelers eat like kings in Thailand.",
+    image: "https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=800&q=70" },
+  { id: "wellness",  title: "Wellness & Pace",       emoji: "💆", blurb: "Spa days, rest, and how full you like the calendar.",
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=70" },
+  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for {n1} & {n2}.",
+    image: "https://images.unsplash.com/photo-1467377791767-c929b5dc9a23?auto=format&fit=crop&w=800&q=70" },
 ];
 
 const QUESTIONS = [
@@ -89,13 +105,6 @@ const QUESTIONS = [
       { label: "Skip-the-line and first-class experiences", emoji: "🎟️", scores: { luxury: 2, culture: 1 } },
       { label: "We'd rather save it and do more", emoji: "📦", scores: { budget: -1, adventure: 1 } },
     ] },
-  { section: "budget", emoji: "🛍️", text: "Shopping and souvenirs — where do you land?",
-    options: [
-      { label: "Bargain the markets, it's half the fun", emoji: "🧧", scores: { shopping: 2, culture: 1, crowds: 1 } },
-      { label: "A few nice gifts and we're done", emoji: "🎁", scores: { shopping: 1 } },
-      { label: "Air-conditioned malls and boutiques, please", emoji: "🛒", scores: { shopping: 2, city: 1, luxury: 1 } },
-      { label: "We don't really shop on vacation", emoji: "🙅", scores: { shopping: -1 } },
-    ] },
 
   /* ---------- SECTION 3: KOSHER & OBSERVANCE ---------- */
   { section: "kosher", emoji: "🥤",
@@ -143,7 +152,7 @@ const QUESTIONS = [
   { section: "vibe", emoji: "🌈", text: "Close your eyes — the perfect vacation day is…",
     options: [
       { label: "An adventure we'll talk about for years", emoji: "🚀", scores: { adventure: 3 } },
-      { label: "A rich day of sightseeing and culture", emoji: "🏛️", scores: { culture: 3 } },
+      { label: "A rich day of sightseeing and local color", emoji: "🏮", scores: { culture: 3 } },
       { label: "Sun, a book, and absolutely no agenda", emoji: "📚", scores: { relax: 3, beach: 1 } },
       { label: "A little of everything, balanced and easy", emoji: "🎨", scores: { relax: 1, culture: 1, adventure: 1 } },
     ] },
@@ -183,30 +192,19 @@ const QUESTIONS = [
       { label: "Watch an elephant show — they even paint!", emoji: "🎨", scores: { nature: 1, crowds: 1 } },
       { label: "We'll admire them from a distance", emoji: "👀", scores: { nature: 1 } },
     ] },
-  { section: "nature", emoji: "⛰️", text: "Misty mountains, rice terraces and cool jungle air — how appealing?",
+  { section: "nature", emoji: "🏞️",
+    info: "🌿 Good to know: Khao Sok National Park (a few hours from Phuket) has floating bungalows right on Cheow Lan Lake — you sleep on the water, surrounded by jungle cliffs. One of Thailand's most magical overnights.",
+    text: "Jungle lakes, misty mountains and rainforest — how appealing?",
     options: [
-      { label: "Deeply — that's the Thailand we dream of", emoji: "🏔️", scores: { nature: 3, culture: 1, heat: -1 } },
-      { label: "A day or two up north would be lovely", emoji: "🌄", scores: { nature: 2 } },
-      { label: "We'll take the beach over the mountains", emoji: "🏖️", scores: { beach: 2, nature: -1 } },
+      { label: "Deeply — a night in a floating bungalow sounds incredible", emoji: "🛖", scores: { nature: 3, adventure: 2 } },
+      { label: "A day or two of green would be lovely", emoji: "🌄", scores: { nature: 2 } },
+      { label: "We'll take the beach over the jungle", emoji: "🏖️", scores: { beach: 2, nature: -1 } },
     ] },
-  { section: "nature", emoji: "🌊", text: "Waterfalls, national parks and nature walks?",
+  { section: "nature", emoji: "💦", text: "Jungle waterfall hikes — Phuket and Koh Samui both have beautiful ones. Interested?",
     options: [
       { label: "Yes please — we love the outdoors", emoji: "🥾", scores: { nature: 2, adventure: 1 } },
       { label: "An easy, scenic one here and there", emoji: "🍃", scores: { nature: 1 } },
       { label: "We prefer our nature from a comfy chair", emoji: "🪑", scores: { relax: 1 } },
-    ] },
-  { section: "nature", emoji: "🌅", text: "A sunrise viewpoint that needs an early, mildly tough hike — worth it?",
-    options: [
-      { label: "100% — the view is the reward", emoji: "📷", scores: { adventure: 2, nature: 1, pace: 1 } },
-      { label: "If it's not too hard, sure", emoji: "🙂", scores: { nature: 1 } },
-      { label: "We'll enjoy the sunrise from the balcony", emoji: "🛎️", scores: { relax: 2, luxury: 1 } },
-    ] },
-  { section: "nature", emoji: "🦋", text: "Which natural setting speaks to you most?",
-    options: [
-      { label: "Lush green jungle and rivers", emoji: "🌴", scores: { nature: 2 } },
-      { label: "Turquoise sea and limestone cliffs", emoji: "🪨", scores: { beach: 2, nature: 1 } },
-      { label: "Cool highland forests and gardens", emoji: "🌲", scores: { nature: 2, heat: -1 } },
-      { label: "Honestly, a beautiful pool will do", emoji: "🏊", scores: { relax: 2, luxury: 1 } },
     ] },
 
   /* ---------- SECTION 6: CULTURE & SIGHTSEEING ---------- */
@@ -241,12 +239,6 @@ const QUESTIONS = [
       { label: "We'd prefer a big, comfortable riverboat ride instead", emoji: "⛴️", scores: { culture: 1, relax: 1, romance: 1 } },
       { label: "We'll pass on the boats", emoji: "🙅", scores: {} },
     ] },
-  { section: "culture", emoji: "🌃", text: "How do you feel about a city's evening energy — night markets, lights, bustle?",
-    options: [
-      { label: "We adore an evening stroll through the buzz", emoji: "🏮", scores: { city: 2, crowds: 1, shopping: 1 } },
-      { label: "A calm evening walk is our speed", emoji: "🌙", scores: { relax: 1, romance: 1 } },
-      { label: "After dark we're back at the hotel", emoji: "🛌", scores: { relax: 2 } },
-    ] },
 
   /* ---------- SECTION 7: BEACHES & WATER ---------- */
   { section: "beach", emoji: "🏖️", text: "Be honest — how much beach do you want?",
@@ -256,23 +248,19 @@ const QUESTIONS = [
       { label: "One or two is plenty", emoji: "🩴", scores: { beach: 1 } },
       { label: "We're not really beach people", emoji: "🏙️", scores: { beach: -2, city: 1 } },
     ] },
-  { section: "beach", emoji: "🐠", text: "Snorkeling in clear water among the fish?",
+  { section: "beach", emoji: "🌊", text: "Water fun — what's calling your names?", multi: true, id: "water",
     options: [
-      { label: "Yes! Show us the coral", emoji: "🤿", scores: { beach: 2, adventure: 2, nature: 1 } },
-      { label: "A gentle float and a look, sure", emoji: "🌊", scores: { beach: 1, adventure: 1 } },
-      { label: "We'll keep our feet on the sand", emoji: "🏖️", scores: { relax: 1 } },
+      { label: "Snorkeling among the coral and fish", emoji: "🤿", scores: { beach: 2, adventure: 1, nature: 1 } },
+      { label: "Jet-ski runs across the bay", emoji: "🚤", scores: { beach: 1, adventure: 2 } },
+      { label: "Parasailing high above the beach", emoji: "🪂", scores: { beach: 1, adventure: 2 } },
+      { label: "Kayaking through quiet coves", emoji: "🛶", scores: { beach: 1, nature: 1 } },
+      { label: "Just floating happily in warm water", emoji: "🏖️", scores: { beach: 1, relax: 1 } },
     ] },
   { section: "beach", emoji: "🛥️", text: "Island-hopping by boat to hidden lagoons?",
     options: [
       { label: "A private long-tail, just us — dreamy", emoji: "💕", scores: { beach: 2, romance: 2, luxury: 1 } },
       { label: "A small group day-trip is great", emoji: "⛵", scores: { beach: 2, adventure: 1 } },
       { label: "We'd rather stay put on one nice beach", emoji: "🧘", scores: { relax: 2 } },
-    ] },
-  { section: "beach", emoji: "🏝️", text: "Your ideal beach scene is…",
-    options: [
-      { label: "Lively, with music and a buzzing beachfront", emoji: "🎶", scores: { beach: 1, city: 1, crowds: 1 } },
-      { label: "Postcard-perfect and peaceful", emoji: "🌅", scores: { beach: 2, relax: 1, romance: 1 } },
-      { label: "Remote and untouched, if we can reach it", emoji: "🧭", scores: { beach: 1, adventure: 2, crowds: -1 } },
     ] },
 
   /* ---------- SECTION 8: FOOD & FLAVORS ---------- */
@@ -315,23 +303,11 @@ const QUESTIONS = [
       { label: "Maybe one, we'll see", emoji: "🤔", scores: { wellness: 1 } },
       { label: "Not for us", emoji: "🙂", scores: {} },
     ] },
-  { section: "wellness", emoji: "🧘", text: "Wellness resorts, yoga, and quiet gardens — how much of the trip?",
-    options: [
-      { label: "We'd love a wellness-focused stay", emoji: "🌸", scores: { wellness: 3, relax: 2 } },
-      { label: "A relaxing element woven throughout", emoji: "🍵", scores: { wellness: 1, relax: 1 } },
-      { label: "We recharge by exploring, not by resting", emoji: "🗺️", scores: { adventure: 2, pace: 1 } },
-    ] },
   { section: "wellness", emoji: "🏊", text: "A resort with a gorgeous pool you'd never want to leave?",
     options: [
       { label: "That alone could make the trip", emoji: "🍹", scores: { relax: 3, luxury: 2 } },
       { label: "A lovely bonus between outings", emoji: "😎", scores: { relax: 1 } },
       { label: "We'd barely use it", emoji: "🚶", scores: { adventure: 1 } },
-    ] },
-  { section: "wellness", emoji: "🗓️", text: "By the end, you want to come home feeling…",
-    options: [
-      { label: "Deeply rested and restored", emoji: "😌", scores: { relax: 3, wellness: 1 } },
-      { label: "Amazed by everything we saw and did", emoji: "🤩", scores: { adventure: 2, culture: 1, pace: 1 } },
-      { label: "A perfect balance of both", emoji: "☯️", scores: { relax: 1, adventure: 1 } },
     ] },
 
   /* ---------- SECTION 10: JUST THE TWO OF YOU ---------- */
@@ -355,7 +331,7 @@ const QUESTIONS = [
       { label: "A loose outline, room to wander", emoji: "🧭", scores: { adventure: 1 } },
       { label: "Just tell us where to be and when", emoji: "🛎️", scores: { luxury: 1, relax: 1 } },
     ] },
-  { section: "together", emoji: "🎁", text: "Avi — which surprise would delight Rivki the most?",
+  { section: "together", emoji: "🎁", text: "{n1} — which surprise would delight {n2} the most?",
     options: [
       { label: "Flowers and a beachfront table under the stars", emoji: "🌹", scores: { romance: 2, beach: 1 } },
       { label: "A pampering spa day", emoji: "🌺", scores: { wellness: 2, relax: 1 } },
@@ -371,12 +347,6 @@ const QUESTIONS = [
       { label: "Rent a moped (or hire a moped driver) — quick and fun", emoji: "🛵", scores: { adventure: 2 } },
       { label: "Walk when we can, it's how we see a place", emoji: "🚶‍♂️", scores: { adventure: 1, pace: 1 } },
     ] },
-  { section: "together", emoji: "🧳", text: "How much of the itinerary do you want pre-booked before you fly?",
-    options: [
-      { label: "Everything — we like certainty", emoji: "🔒", scores: { luxury: 1, pace: 1 } },
-      { label: "The big things; leave room for spontaneity", emoji: "🎲", scores: { adventure: 1 } },
-      { label: "As little as possible — go with the flow", emoji: "🍃", scores: { adventure: 2, relax: 1 } },
-    ] },
   { section: "together", emoji: "🌏", text: "Last one! If this trip is a huge hit, you'd…",
     options: [
       { label: "Come straight back to explore more of Thailand", emoji: "🔁", scores: { adventure: 2 } },
@@ -390,31 +360,32 @@ const TOTAL_QUESTIONS = QUESTIONS.length;
 
 /* ============================================================
    THE RECOMMENDED PATH
-   One recommended option index per question (in order). Together
-   they sketch the trip we'd suggest: two full weeks, island- and
-   water-focused, based in beautiful resorts, with evening shows,
-   a Muay Thai fight night, strictly kosher and Shabbos-aware.
-   The UI pre-selects these and tags them "(recommended)".
+   One recommended option (or array, for multi-selects) per
+   question, in order. Together they sketch the trip we'd
+   suggest: two full weeks, island- and water-focused, based in
+   beautiful resorts, elephant days, evening shows, a Muay Thai
+   night, and a daily fruit-shake-and-massage ritual — strictly
+   kosher and Shabbos-aware throughout.
    ============================================================ */
 const RECOMMENDED = [
   // The Basics
   3, 0, 0, 1, 0,
-  // Budget & Comfort (pay-extra is multi-select: driver+guide AND the view)
-  2, 2, 1, [0, 1], 1,
+  // Budget & Comfort (pay-extra is multi: driver+guide AND the view)
+  2, 2, 1, [0, 1],
   // Kosher & Observance
   0, 1, 2, 1, 1, 0,
-  // The Vacation Vibe (gentle thrills; floating-market photo stays classic)
+  // The Vacation Vibe
   3, 2, 1, 1, 0,
   // Nature & Outdoors (elephants: ride + feed & bathe + the show)
-  [0, 1, 2], 2, 1, 2, 1,
+  [0, 1, 2], 1, 1,
   // Culture & Sightseeing (shopping: sneakers+clothing+wood décor; shows: FantaSea + Muay Thai)
-  [0, 1, 2], [0, 2], 1, 0, 0,
-  // Beaches & Water (island-hopping: the group day-trip)
-  0, 0, 1, 1,
+  [0, 1, 2], [0, 2], 1, 0,
+  // Beaches & Water (water fun: snorkel + jet-ski + parasail; island-hopping: group trip)
+  0, [0, 1, 2], 1,
   // Food & Flavors (foods: try it ALL — every one exists kosher)
   [0, 1, 2, 3, 4], 0, 1, 0,
   // Wellness & Pace (massage: daily!)
-  0, 1, 0, 2,
+  0, 0,
   // Just the Two of You
-  0, 0, 1, 0, 1, 1, 0,
+  0, 0, 1, 0, 1, 0,
 ];

@@ -99,6 +99,8 @@ const DESTINATIONS = {
     highlights: [
       "Day trips by boat to the Phi Phi Islands and James Bond Island",
       "Jet-ski runs and parasailing over the bay",
+      "Khao Phra Thaeo National Park — hike through real rainforest to the Bang Pae and Ton Sai waterfalls",
+      "An overnight side-trip to Khao Sok's floating bungalows on Cheow Lan Lake — sleeping on the water among jungle cliffs",
       "Charming, colorful Phuket Old Town (Sino-Portuguese streets)",
       "Beautiful beaches — Kata, Karon and quieter southern coves",
       "Luxurious beachfront resorts and world-class spas",
@@ -140,7 +142,8 @@ const DESTINATIONS = {
       "World-renowned wellness and spa resorts",
       "A boat trip to the stunning Ang Thong Marine Park",
       "Jet-ski and parasailing fun over Chaweng bay",
-      "A jungle ATV safari to waterfalls and island viewpoints",
+      "A hike to the Na Muang jungle waterfalls — cool pools deep in the green",
+      "A jungle ATV safari to island viewpoints",
       "Calm, palm-lined coves perfect for slow days",
       "A beachfront fire show under the stars after dinner",
     ],
