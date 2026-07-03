@@ -31,15 +31,24 @@ function esc(s) {
 function personalize(str) {
   return str.replace(/\{n1\}/g, COUPLE.n1).replace(/\{n2\}/g, COUPLE.n2);
 }
-/* Fill every element marked with a data-names role on the static page */
+/* Pick the personalized or generic wording for a text with a generic twin */
+function wording(text, generic) {
+  return (!COUPLE.custom && generic) ? generic : personalize(text);
+}
+/* Personalize the static page — only when names came in via the URL.
+   Without names, the generic "Kosher Thailand Vacation Builder"
+   branding in the HTML stays untouched. */
 function applyNames() {
-  const both = COUPLE.both;
-  const welcomeName = COUPLE.custom ? both : "Avi & Rivki Barr";
-  document.querySelectorAll("[data-names]").forEach(elm => {
-    elm.textContent = elm.dataset.names === "welcome" ? welcomeName : both;
-  });
+  if (COUPLE.custom) {
+    const both = esc(COUPLE.both);
+    document.querySelector("#hero-badge").textContent = `Designed just for ${COUPLE.both}`;
+    document.querySelector("#hero-title").innerHTML =
+      `${both}, Your Perfect <span class="accent">Thailand</span> Vacation Awaits`;
+    document.querySelector("#welcome-line").innerHTML =
+      `Welcome, <b>${both}</b>! Answer <span data-qcount></span> quick, fun questions together and your personal trip designer will craft a Thailand vacation made just for the two of you. 🌏`;
+    document.title = `${COUPLE.both}'s Thailand Trip Designer 🇹🇭`;
+  }
   document.querySelectorAll("[data-qcount]").forEach(elm => { elm.textContent = TOTAL_QUESTIONS; });
-  document.title = `${both}'s Thailand Trip Designer 🇹🇭`;
 }
 applyNames();
 
@@ -156,8 +165,8 @@ function renderQuestion() {
   }
 
   el("#q-emoji").textContent = q.emoji;
-  el("#q-text").textContent = personalize(q.text);
-  el("#q-hint").textContent = q.multi ? "Select all that apply, then tap Next" : personalize(sec.blurb);
+  el("#q-text").textContent = wording(q.text, q.textGeneric);
+  el("#q-hint").textContent = q.multi ? "Select all that apply, then tap Next" : wording(sec.blurb, sec.blurbGeneric);
 
   // optional "good to know" info box above the options
   const infoBox = el("#q-info");
@@ -363,14 +372,14 @@ function renderResult(rec, code) {
     </div>` : ""}
     <div class="result-hero">
       <div class="tada">🎉🇹🇭</div>
-      <h2>${esc(COUPLE.both)}, Your Thailand Journey is Ready!</h2>
+      <h2>${COUPLE.custom ? esc(COUPLE.both) + ", y" : "Y"}our Thailand Journey is Ready!</h2>
       <p>${rec.meta.tripLength} days · ${placeNames}</p>
     </div>
 
     <div class="note-card">
       <div class="note-head">
         <div class="avi-avatar">🧑‍✈️</div>
-        <div><b>A note for ${esc(COUPLE.both)}</b><span>From your personal Thailand trip designer</span></div>
+        <div><b>A note for ${COUPLE.custom ? esc(COUPLE.both) : "you two"}</b><span>From your personal Thailand trip designer</span></div>
       </div>
       <div class="note-body">${noteHtml}</div>
     </div>
@@ -436,7 +445,7 @@ function renderResult(rec, code) {
     ${link ? `
     <div class="panel share-panel">
       <h3>📤 Share this trip</h3>
-      <p class="share-sub">Send this exact itinerary to ${esc(COUPLE.n2)}, family or friends — the link opens the full plan, answers and all.</p>
+      <p class="share-sub">Send this exact itinerary to ${COUPLE.custom ? esc(COUPLE.n2) + ", family or friends" : "family or friends"} — the link opens the full plan, answers and all.</p>
       <div class="share-link-row">
         <input id="share-url" readonly value="${link}" />
         <button id="copy-btn">Copy</button>
@@ -449,7 +458,7 @@ function renderResult(rec, code) {
 
     <button class="btn btn--emerald" id="restart-btn">↻ Start over / try different answers</button>
     <div class="credit-card">🤖 Created by <b>Jonathan Caras</b> using various AI tools</div>
-    <div class="footer">Made with ❤️ for <b>${esc(COUPLE.custom ? COUPLE.both : "Avi & Rivki Barr")}</b> · Your first Thailand adventure together awaits 🇹🇭</div>
+    <div class="footer">Made with ❤️ for <b>${COUPLE.custom ? esc(COUPLE.both) : "kosher travelers everywhere"}</b> · Your first Thailand adventure together awaits 🇹🇭</div>
   `;
 
   // animate bars in

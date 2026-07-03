@@ -211,7 +211,7 @@ function aviNote(profile, meta, chosen) {
   if (profile.romance >= 5) styleBits.push("enjoy real quality time, just the two of you");
   if (profile.food >= 5) styleBits.push("eat wonderfully well — kosher and all");
 
-  const who = (typeof COUPLE !== "undefined" && COUPLE.both) ? COUPLE.both : "Avi & Rivki";
+  const who = (typeof COUPLE !== "undefined" && COUPLE.custom) ? COUPLE.both : "friends";
   return `Shalom, ${who}! 🌏\n\n` +
     `I read every one of your ${TOTAL_QUESTIONS} answers, and I have to say — you two are going to *love* Thailand. ` +
     `Based on everything you told me, I've built you a ${meta.tripLength}-day journey through ${placeList}, ` +

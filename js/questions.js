@@ -35,7 +35,7 @@ const SECTIONS = [
     image: "https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=800&q=70" },
   { id: "wellness",  title: "Wellness & Pace",       emoji: "💆", blurb: "Spa days, rest, and how full you like the calendar.",
     image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=70" },
-  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for {n1} & {n2}.",
+  { id: "together",  title: "Just the Two of You",   emoji: "❤️", blurb: "The finishing touches for {n1} & {n2}.", blurbGeneric: "The finishing touches for the two of you.",
     image: "https://images.unsplash.com/photo-1467377791767-c929b5dc9a23?auto=format&fit=crop&w=800&q=70" },
 ];
 
@@ -332,6 +332,7 @@ const QUESTIONS = [
       { label: "Just tell us where to be and when", emoji: "🛎️", scores: { luxury: 1, relax: 1 } },
     ] },
   { section: "together", emoji: "🎁", text: "{n1} — which surprise would delight {n2} the most?",
+    textGeneric: "Which surprise would delight your other half the most?",
     options: [
       { label: "Flowers and a beachfront table under the stars", emoji: "🌹", scores: { romance: 2, beach: 1 } },
       { label: "A pampering spa day", emoji: "🌺", scores: { wellness: 2, relax: 1 } },
