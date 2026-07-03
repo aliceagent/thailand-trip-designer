@@ -17,17 +17,24 @@ function emptyProfile() {
   return p;
 }
 
-/* Aggregate all answer scores + pull out meta values */
+/* Aggregate all answer scores + pull out meta values.
+   Multi-select answers arrive as arrays — every chosen option counts. */
 function buildProfile(answers) {
   const profile = emptyProfile();
   const meta = { tripLength: 8 };
   answers.forEach((opt) => {
-    if (!opt) return;
-    if (opt.scores) {
-      for (const k in opt.scores) profile[k] += opt.scores[k];
-    }
-    if (opt.meta) Object.assign(meta, opt.meta);
+    const opts = Array.isArray(opt) ? opt : [opt];
+    opts.forEach((o) => {
+      if (!o) return;
+      if (o.scores) {
+        for (const k in o.scores) profile[k] += o.scores[k];
+      }
+      if (o.meta) Object.assign(meta, o.meta);
+    });
   });
+  // The couple is assumed strictly kosher — every itinerary keeps kosher
+  // infrastructure in reach regardless of individual answers.
+  profile.kosherStrict += 3;
   return { profile, meta };
 }
 
@@ -37,7 +44,7 @@ function norm(v, max) { return Math.max(0, Math.min(1, (v + max) / (max * 2))); 
 /* Budget tier from accumulated budget/luxury points */
 function budgetTier(profile) {
   const b = profile.budget + profile.luxury * 0.6;
-  if (b >= 16) return { tier: "Luxury", perDay: [350, 600], key: "luxury" };
+  if (b >= 18) return { tier: "Luxury", perDay: [350, 600], key: "luxury" };
   if (b >= 7)  return { tier: "Upscale", perDay: [200, 350], key: "upscale" };
   if (b >= 3)  return { tier: "Comfortable mid-range", perDay: [110, 200], key: "mid" };
   return { tier: "Value-savvy", perDay: [60, 110], key: "value" };
@@ -145,8 +152,10 @@ function buildDayPlan(dest, days, profile) {
     picks.push(h[hi % h.length]); hi++;
     if (profile.pace > 2 && day < days) { picks.push(h[hi % h.length]); hi++; }
     let line = picks.join("; then ");
-    if (profile.wellness > 3 && day % 2 === 0) line += ". End with a relaxing Thai massage.";
     if (profile.relax > 5 && day % 3 === 0) line = "A slow, unstructured day — pool, rest, and wander at your own pace.";
+    // the daily ritual: spa-loving couples get a shake + massage every day
+    if (profile.wellness >= 4) line += ". End the day with a fresh fruit shake and a Thai massage.";
+    else if (profile.wellness > 1 && day % 2 === 0) line += ". End with a relaxing Thai massage.";
     plan.push(line);
   }
   // weave the evening spectacles into the middle of the leg
@@ -173,7 +182,7 @@ function topThemes(profile) {
   const themeMap = [
     { key: "relax", label: "Relaxation & rest", emoji: "🧘" },
     { key: "adventure", label: "Adventure & exploration", emoji: "🚀" },
-    { key: "culture", label: "Culture & temples", emoji: "🛕" },
+    { key: "culture", label: "Markets & local culture", emoji: "🏮" },
     { key: "nature", label: "Nature & the outdoors", emoji: "🌿" },
     { key: "beach", label: "Beaches & islands", emoji: "🏝️" },
     { key: "city", label: "City energy", emoji: "🏙️" },

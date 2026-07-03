@@ -78,7 +78,7 @@ body::after { width: 320px; height: 320px; bottom: -120px; left: -100px;
 .hero__img {
   position: absolute; inset: 0;
   background-image: linear-gradient(180deg, rgba(8,76,55,.15) 0%, rgba(8,76,55,.75) 100%),
-    url("https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1200&q=80");
+    url("https://images.unsplash.com/photo-1504214208698-ea1916a2195a?auto=format&fit=crop&w=1200&q=80");
   background-size: cover; background-position: center;
   transform: scale(1.02);
 }
@@ -151,6 +151,15 @@ body::after { width: 320px; height: 320px; bottom: -120px; left: -100px;
 .q-emoji { font-size: 2.4rem; line-height: 1; }
 .q-text { font-size: 1.28rem; font-weight: 700; margin: 12px 0 4px; line-height: 1.28; }
 .q-hint { font-size: .82rem; color: var(--ink-soft); margin-bottom: 16px; }
+
+.q-info {
+  background: #FFF6E5; border: 2px dashed var(--gold); border-radius: var(--radius-sm);
+  padding: 13px 15px; margin-bottom: 16px; font-size: .88rem; color: var(--ink); line-height: 1.5;
+}
+.q-info[hidden] { display: none; }
+
+.btn--next { margin-top: 16px; padding: 14px 22px; font-size: 1rem; }
+.btn--next[hidden] { display: none; }
 
 .options { display: grid; gap: 11px; }
 .option {

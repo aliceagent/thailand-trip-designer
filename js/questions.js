@@ -16,7 +16,7 @@ const SECTIONS = [
   { id: "kosher",    title: "Kosher & Observance",   emoji: "✡️", blurb: "So your itinerary keeps Shabbos and your kitchen in mind." },
   { id: "vibe",      title: "The Vacation Vibe",     emoji: "🌈", blurb: "Adventure seekers or slow-and-easy? Let's find out." },
   { id: "nature",    title: "Nature & Outdoors",     emoji: "🌿", blurb: "Mountains, jungles, elephants and open sky." },
-  { id: "culture",   title: "Culture & Sightseeing", emoji: "🛕", blurb: "Temples, history, markets and local color." },
+  { id: "culture",   title: "Culture & Sightseeing", emoji: "🏮", blurb: "Markets, shows, shopping and local color." },
   { id: "beach",     title: "Beaches & Water",       emoji: "🏝️", blurb: "The islands are calling. How loud?" },
   { id: "food",      title: "Food & Flavors",        emoji: "🍜", blurb: "Even kosher travelers eat like kings in Thailand." },
   { id: "wellness",  title: "Wellness & Pace",       emoji: "💆", blurb: "Spa days, rest, and how full you like the calendar." },
@@ -82,7 +82,7 @@ const QUESTIONS = [
       { label: "A nice sit-down kosher dinner most nights", emoji: "🍲", scores: { budget: 2, food: 1 } },
       { label: "Treat ourselves — the best kosher table in town", emoji: "🍾", scores: { budget: 3, food: 2, luxury: 1 } },
     ] },
-  { section: "budget", emoji: "🛎️", text: "Which of these would you happily pay extra for?",
+  { section: "budget", emoji: "🛎️", text: "Which of these would you happily pay extra for?", multi: true,
     options: [
       { label: "A private driver and guide", emoji: "🚙", scores: { luxury: 2, relax: 1 } },
       { label: "A room with a jaw-dropping view", emoji: "🌅", scores: { luxury: 2, romance: 1 } },
@@ -98,12 +98,13 @@ const QUESTIONS = [
     ] },
 
   /* ---------- SECTION 3: KOSHER & OBSERVANCE ---------- */
-  { section: "kosher", emoji: "🍽️", text: "How do you plan to handle kosher food on this trip?",
+  { section: "kosher", emoji: "🥤",
+    info: "💡 Good to know: eating strictly kosher in Thailand is easier than you'd think. Markets overflow with fresh tropical fruit, the local Chabad publishes a list of supermarket products that are kosher even without a printed symbol, and the fresh juice & smoothie stands — just fruit and ice — are considered kosher by the local Chabad. This whole trip assumes strictly kosher: no non-kosher restaurants, no non-kosher cooked food.",
+    text: "Fresh-fruit juice & smoothie stands are everywhere (and kosher, per the local Chabad). How often will you stop?",
     options: [
-      { label: "Strictly kosher — only certified restaurants and Chabad", emoji: "✅", scores: { kosherStrict: 3, observance: 1 } },
-      { label: "Kosher-style — we'll cook and buy carefully", emoji: "🧑‍🍳", scores: { kosherStrict: 2, budget: -1 } },
-      { label: "Mostly kosher, flexible on fresh produce & fish", emoji: "🐟", scores: { kosherStrict: 1 } },
-      { label: "We manage with fruit, packaged goods and our own supplies", emoji: "🥫", scores: { kosherStrict: 1, adventure: 1 } },
+      { label: "Constantly — the mango shakes are calling", emoji: "🥭", scores: { food: 2, heat: 1 } },
+      { label: "Whenever one looks inviting", emoji: "🍹", scores: { food: 1 } },
+      { label: "Once in a while", emoji: "🙂", scores: {} },
     ] },
   { section: "kosher", emoji: "🕍", text: "How important is being walking-distance from a shul on Shabbos?",
     options: [
@@ -112,12 +113,11 @@ const QUESTIONS = [
       { label: "Nice to have for at least one Shabbos", emoji: "🌇", scores: { observance: 1 } },
       { label: "We're comfortable making our own Shabbos anywhere", emoji: "🕯️", scores: { observance: 0, adventure: 1 } },
     ] },
-  { section: "kosher", emoji: "🍷", text: "Friday night — what's your ideal Shabbos?",
+  { section: "kosher", emoji: "🍷", text: "Shabbos meals — how do you two want to do them?",
     options: [
-      { label: "At the Chabad House with a big warm crowd", emoji: "👨‍👩‍👧‍👦", scores: { observance: 2, crowds: 1 } },
-      { label: "A quiet, private Shabbos, just the two of us", emoji: "🕯️", scores: { observance: 1, romance: 2, relax: 1 } },
-      { label: "A mix — shul davening, then a calm meal", emoji: "🌙", scores: { observance: 2, relax: 1 } },
-      { label: "Whatever the trip allows, we're easygoing", emoji: "🤗", scores: { adventure: 1 } },
+      { label: "Join the big, warm, lively communal meals at Chabad", emoji: "👨‍👩‍👧‍👦", scores: { observance: 2, crowds: 1 } },
+      { label: "Order Shabbos catering and enjoy it quietly at our hotel", emoji: "🕯️", scores: { observance: 1, romance: 2, relax: 1 } },
+      { label: "Mix and match — one meal out with the crowd, one just us", emoji: "🌙", scores: { observance: 2, relax: 1 } },
     ] },
   { section: "kosher", emoji: "🧼", text: "How do you feel about a kitchenette in your room?",
     options: [
@@ -132,11 +132,11 @@ const QUESTIONS = [
       { label: "Chabad when it's around, on our own otherwise", emoji: "🧎", scores: { observance: 1 } },
       { label: "We daven privately and keep our schedule flexible", emoji: "🌄", scores: { adventure: 1 } },
     ] },
-  { section: "kosher", emoji: "🌅", text: "Would you build the whole trip around one very special Shabbos somewhere?",
+  { section: "kosher", emoji: "🛒", text: "Bangkok has real kosher groceries. Want to stock up there before heading out?",
     options: [
-      { label: "Yes — a beautiful Shabbos is the heart of it", emoji: "💛", scores: { observance: 2, romance: 1 } },
-      { label: "We'd like at least one memorable Shabbos", emoji: "✨", scores: { observance: 1 } },
-      { label: "Shabbos is important but not the centerpiece", emoji: "⚖️", scores: {} },
+      { label: "Definitely — we'll leave with a full cooler", emoji: "🧊", scores: { kosherStrict: 2, city: 1 } },
+      { label: "A quick stop for the essentials", emoji: "🧺", scores: { kosherStrict: 1 } },
+      { label: "We'll manage with fruit and local finds", emoji: "🥭", scores: { adventure: 1 } },
     ] },
 
   /* ---------- SECTION 4: THE VACATION VIBE ---------- */
@@ -150,6 +150,7 @@ const QUESTIONS = [
   { section: "vibe", emoji: "🎢", text: "How do you feel about trying something a little daring?",
     options: [
       { label: "Sign us up — zip-lines, rafting, the works", emoji: "🪂", scores: { adventure: 3 } },
+      { label: "ATVs and quad-bike trails — let's ride", emoji: "🏍️", scores: { adventure: 2, nature: 1 } },
       { label: "Gentle thrills, nothing crazy", emoji: "🚣", scores: { adventure: 1, nature: 1 } },
       { label: "We'll watch, thanks — with a cold drink", emoji: "🍹", scores: { relax: 2 } },
     ] },
@@ -168,18 +169,19 @@ const QUESTIONS = [
   { section: "vibe", emoji: "📸", text: "The photo you most want to bring home is…",
     options: [
       { label: "The two of us on a stunning beach at sunset", emoji: "🌅", scores: { beach: 2, romance: 2 } },
-      { label: "A golden temple glowing in the light", emoji: "🛕", scores: { culture: 2 } },
+      { label: "A colorful floating market from a longtail boat", emoji: "🛶", scores: { culture: 2 } },
       { label: "Us with a gentle elephant in the jungle", emoji: "🐘", scores: { nature: 2, adventure: 1 } },
       { label: "A dazzling city skyline at night", emoji: "🌃", scores: { city: 2, nightlife: 1 } },
     ] },
 
   /* ---------- SECTION 5: NATURE & OUTDOORS ---------- */
-  { section: "nature", emoji: "🐘", text: "There are ethical elephant sanctuaries where you can feed and bathe them. Interested?",
+  { section: "nature", emoji: "🐘", id: "elephants", multi: true,
+    text: "Elephants are Thailand's superstars. How do you want to meet them?",
     options: [
-      { label: "Absolutely — a bucket-list moment", emoji: "💧", scores: { nature: 3, adventure: 1 } },
-      { label: "Yes, a gentle visit sounds wonderful", emoji: "🌿", scores: { nature: 2 } },
-      { label: "Maybe from a distance", emoji: "👀", scores: { nature: 1 } },
-      { label: "Not our thing", emoji: "🙂", scores: {} },
+      { label: "Ride one through the jungle", emoji: "🌴", scores: { nature: 2, adventure: 2 } },
+      { label: "Feed and bathe them up close", emoji: "💧", scores: { nature: 2 } },
+      { label: "Watch an elephant show — they even paint!", emoji: "🎨", scores: { nature: 1, crowds: 1 } },
+      { label: "We'll admire them from a distance", emoji: "👀", scores: { nature: 1 } },
     ] },
   { section: "nature", emoji: "⛰️", text: "Misty mountains, rice terraces and cool jungle air — how appealing?",
     options: [
@@ -208,29 +210,35 @@ const QUESTIONS = [
     ] },
 
   /* ---------- SECTION 6: CULTURE & SIGHTSEEING ---------- */
-  { section: "culture", emoji: "🛕", text: "Thailand's temples are breathtaking. How many is 'just right'?",
+  { section: "culture", emoji: "🛍️", id: "shopping", multi: true,
+    text: "Thailand is a shopper's paradise — what would you love to hunt for?",
     options: [
-      { label: "As many as we can — we love history", emoji: "📜", scores: { culture: 3 } },
-      { label: "The famous few, done properly", emoji: "⭐", scores: { culture: 2 } },
-      { label: "One or two, then move on", emoji: "🚶", scores: { culture: 1 } },
-      { label: "Temples aren't really our focus", emoji: "🙂", scores: { culture: -1 } },
+      { label: "Brand-name sneakers & sportswear", emoji: "👟", scores: { shopping: 1, city: 1 } },
+      { label: "Clothing & fashion", emoji: "👗", scores: { shopping: 1, city: 1 } },
+      { label: "Handmade wood décor & furniture for the house", emoji: "🪵", scores: { shopping: 1, culture: 1 } },
+      { label: "Electronics & gadgets", emoji: "🎧", scores: { shopping: 1, city: 1 } },
+      { label: "Just small gifts and souvenirs", emoji: "🎁", scores: { shopping: 1 } },
     ] },
-  { section: "culture", emoji: "🏛️", text: "The Grand Palace and old royal Bangkok — on the list?",
+  { section: "culture", emoji: "🎭", id: "shows", multi: true,
+    text: "Thailand's evening entertainment is world-class. What sounds fun?",
     options: [
-      { label: "Definitely — the grandeur is unmissable", emoji: "👑", scores: { culture: 2, city: 1 } },
-      { label: "Sounds nice for a morning", emoji: "🌇", scores: { culture: 1, city: 1 } },
-      { label: "We'd skip the big crowds", emoji: "😌", scores: { crowds: -1 } },
+      { label: "A grand spectacular — Phuket FantaSea-style", emoji: "🎆", scores: { crowds: 1, nightlife: 1, luxury: 1 } },
+      { label: "A dazzling cabaret or cultural show", emoji: "💃", scores: { crowds: 1, nightlife: 1 } },
+      { label: "A Muay Thai boxing night", emoji: "🥊", scores: { adventure: 1, nightlife: 1 } },
+      { label: "A snake show — thrilling and wild", emoji: "🐍", scores: { adventure: 1, crowds: 1 } },
+      { label: "Quiet evenings are more our speed", emoji: "🌙", scores: { relax: 1 } },
     ] },
-  { section: "culture", emoji: "🎭", text: "Local culture — markets, crafts, traditions. How hands-on?",
+  { section: "culture", emoji: "🧶", text: "Local culture — markets, crafts and village traditions. How hands-on?",
     options: [
-      { label: "Immerse us — we want the real Thailand", emoji: "🧶", scores: { culture: 2, adventure: 1 } },
-      { label: "A guided taste is perfect", emoji: "🧭", scores: { culture: 1, luxury: 1 } },
+      { label: "Immerse us — craft villages, workshops, the real Thailand", emoji: "🪡", scores: { culture: 2, adventure: 1 } },
+      { label: "A guided tour with a great storyteller", emoji: "🧭", scores: { culture: 1, luxury: 1 } },
       { label: "We prefer to keep things relaxed", emoji: "🍹", scores: { relax: 1 } },
     ] },
-  { section: "culture", emoji: "🚤", text: "A longtail boat through the old canals and floating markets?",
+  { section: "culture", emoji: "🛶",
+    text: "In Bangkok you can ride a longtail boat through the old canals, past stilt houses, to a floating market where vendors sell fruit right from their boats. Interested?",
     options: [
-      { label: "Yes — that's the postcard we want", emoji: "🛶", scores: { culture: 2, adventure: 1 } },
-      { label: "A gentle river cruise, yes", emoji: "⛴️", scores: { culture: 1, relax: 1, romance: 1 } },
+      { label: "Yes — the longtail and the floating market, all of it", emoji: "🚤", scores: { culture: 2, adventure: 1 } },
+      { label: "We'd prefer a big, comfortable riverboat ride instead", emoji: "⛴️", scores: { culture: 1, relax: 1, romance: 1 } },
       { label: "We'll pass on the boats", emoji: "🙅", scores: {} },
     ] },
   { section: "culture", emoji: "🌃", text: "How do you feel about a city's evening energy — night markets, lights, bustle?",
@@ -268,23 +276,29 @@ const QUESTIONS = [
     ] },
 
   /* ---------- SECTION 8: FOOD & FLAVORS ---------- */
-  { section: "food", emoji: "🍜", text: "How adventurous are your palates (within kosher, of course)?",
+  { section: "food", emoji: "🍽️", id: "foods", multi: true,
+    info: "😋 Yes, really — all of this exists KOSHER in Thailand, plus a few kosher bakeries and ice cream shops.",
+    text: "What do you two love to eat? (All available kosher!)",
     options: [
-      { label: "Bring on the bold Thai flavors — kosher versions welcome", emoji: "🌶️", scores: { food: 3, adventure: 1 } },
-      { label: "We like tasty but not too spicy", emoji: "🍲", scores: { food: 2 } },
-      { label: "Familiar comfort food keeps us happy", emoji: "🥗", scores: { food: 1 } },
+      { label: "Real Thai food — pad thai, curries, noodle soups", emoji: "🍜", scores: { food: 2 } },
+      { label: "Burgers & steaks", emoji: "🥩", scores: { food: 1 } },
+      { label: "Israeli classics — breakfasts, salads, shakshuka", emoji: "🍳", scores: { food: 1 } },
+      { label: "Sushi & fresh fish", emoji: "🍣", scores: { food: 1 } },
+      { label: "Pizza, waffles & sweet treats", emoji: "🍕", scores: { food: 1 } },
     ] },
-  { section: "food", emoji: "🥭", text: "Tropical fruit — mango, mangosteen, dragonfruit, fresh coconut…",
+  { section: "food", emoji: "🥭",
+    info: "🍈 Durian tip: the famous 'king of fruits' is delicious — but so pungent that hotels ban it. Enjoy it fresh at the market; just don't bring it back to your room!",
+    text: "Tropical fruit — mango, mangosteen, dragonfruit, durian, fresh coconut…",
     options: [
       { label: "A highlight of the whole trip!", emoji: "🍈", scores: { food: 2, nature: 1 } },
       { label: "We'll happily enjoy them", emoji: "🍉", scores: { food: 1 } },
       { label: "Take them or leave them", emoji: "🙂", scores: {} },
     ] },
-  { section: "food", emoji: "🍽️", text: "A dedicated kosher restaurant vs. cooking your own — what's the dream?",
+  { section: "food", emoji: "⚖️", text: "What's the right balance between making your own food and eating out kosher?",
     options: [
-      { label: "Sit us down at a great kosher restaurant every night", emoji: "🍷", scores: { food: 2, city: 1, observance: 1, budget: 1 } },
-      { label: "A mix of eating out and Shabbos cooking", emoji: "🍳", scores: { food: 1 } },
-      { label: "We're happy self-catering to keep it simple", emoji: "🥫", scores: { budget: 1, adventure: 1 } },
+      { label: "Eat out for almost every meal", emoji: "🍷", scores: { food: 2, city: 1, observance: 1, budget: 1 } },
+      { label: "About half and half", emoji: "🍳", scores: { food: 1 } },
+      { label: "Mostly our own, eating out as a treat", emoji: "🥫", scores: { budget: 1, adventure: 1 } },
     ] },
   { section: "food", emoji: "☕", text: "A slow morning — good coffee, your own kosher breakfast, and a beautiful view?",
     options: [
@@ -348,10 +362,13 @@ const QUESTIONS = [
       { label: "A once-in-a-lifetime elephant morning", emoji: "🐘", scores: { nature: 2, adventure: 1 } },
       { label: "A luxury shopping afternoon", emoji: "👜", scores: { shopping: 2, city: 1, luxury: 1 } },
     ] },
-  { section: "together", emoji: "🚕", text: "Getting around a city — your preference?",
+  { section: "together", emoji: "🚕",
+    info: "💡 Getting-around tips: Grab is Thailand's Uber — install it, attach your credit card, and verify your phone number before you leave Israel. And load the Airalo eSIM app before you fly for the cheapest data plans in Thailand.",
+    text: "Getting around a city — your preference?",
     options: [
       { label: "A private car and driver, stress-free", emoji: "🚙", scores: { luxury: 2, relax: 1 } },
-      { label: "Taxis and the odd tuk-tuk for fun", emoji: "🛺", scores: { adventure: 1, culture: 1 } },
+      { label: "Grab rides and the odd tuk-tuk for fun", emoji: "🛺", scores: { adventure: 1, culture: 1 } },
+      { label: "Rent a moped (or hire a moped driver) — quick and fun", emoji: "🛵", scores: { adventure: 2 } },
       { label: "Walk when we can, it's how we see a place", emoji: "🚶‍♂️", scores: { adventure: 1, pace: 1 } },
     ] },
   { section: "together", emoji: "🧳", text: "How much of the itinerary do you want pre-booked before you fly?",
@@ -382,22 +399,22 @@ const TOTAL_QUESTIONS = QUESTIONS.length;
 const RECOMMENDED = [
   // The Basics
   3, 0, 0, 1, 0,
-  // Budget & Comfort
-  2, 2, 1, 1, 1,
+  // Budget & Comfort (pay-extra is multi-select: driver+guide AND the view)
+  2, 2, 1, [0, 1], 1,
   // Kosher & Observance
-  0, 1, 2, 1, 1, 1,
-  // The Vacation Vibe
-  3, 1, 1, 1, 0,
-  // Nature & Outdoors
-  1, 2, 1, 2, 1,
-  // Culture & Sightseeing
-  1, 1, 1, 1, 0,
-  // Beaches & Water
-  0, 0, 0, 1,
-  // Food & Flavors
-  1, 0, 0, 0,
-  // Wellness & Pace
-  1, 1, 0, 2,
+  0, 1, 2, 1, 1, 0,
+  // The Vacation Vibe (gentle thrills; floating-market photo stays classic)
+  3, 2, 1, 1, 0,
+  // Nature & Outdoors (elephants: ride + feed & bathe + the show)
+  [0, 1, 2], 2, 1, 2, 1,
+  // Culture & Sightseeing (shopping: sneakers+clothing+wood décor; shows: FantaSea + Muay Thai)
+  [0, 1, 2], [0, 2], 1, 0, 0,
+  // Beaches & Water (island-hopping: the group day-trip)
+  0, 0, 1, 1,
+  // Food & Flavors (foods: try it ALL — every one exists kosher)
+  [0, 1, 2, 3, 4], 0, 1, 0,
+  // Wellness & Pace (massage: daily!)
+  0, 1, 0, 2,
   // Just the Two of You
   0, 0, 1, 0, 1, 1, 0,
 ];

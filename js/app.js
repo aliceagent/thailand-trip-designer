@@ -9,16 +9,40 @@ const state = {
 let sharedView = false;   // true when viewing a trip opened from a shared link
 
 /* ---------- Shareable links ----------
-   Every answer is an option index (0-3), so a full quiz encodes to a
-   50-digit string. `?trip=<code>` reproduces the exact itinerary. */
+   Single-choice answers encode as their option index (0-3); multi-select
+   answers encode as a base36 bitmask of the chosen options (supports up
+   to 5 options per question). One character per question, so a full quiz
+   is a 50-char code. `?trip=<code>` reproduces the exact itinerary. */
 function answersToCode(answers) {
-  const digits = answers.map((a, i) => QUESTIONS[i].options.indexOf(a));
-  return digits.some(d => d < 0) ? null : digits.join("");
+  const digits = answers.map((a, i) => {
+    const q = QUESTIONS[i];
+    if (q.multi) {
+      if (!Array.isArray(a)) return null;
+      let mask = 0;
+      for (const o of a) {
+        const k = q.options.indexOf(o);
+        if (k < 0) return null;
+        mask |= 1 << k;
+      }
+      return mask.toString(36);
+    }
+    const k = q.options.indexOf(a);
+    return k < 0 ? null : String(k);
+  });
+  return digits.some(d => d === null) ? null : digits.join("");
 }
 function codeToAnswers(code) {
   if (typeof code !== "string" || code.length !== TOTAL_QUESTIONS) return null;
-  const answers = [...code].map((c, i) => QUESTIONS[i].options[+c]);
-  return answers.some(a => !a) ? null : answers;
+  const answers = [...code].map((c, i) => {
+    const q = QUESTIONS[i];
+    if (q.multi) {
+      const mask = parseInt(c, 36);
+      if (isNaN(mask) || mask >= (1 << q.options.length)) return null;
+      return q.options.filter((_, k) => mask & (1 << k));
+    }
+    return q.options[+c] ?? null;
+  });
+  return answers.some(a => a === null) ? null : answers;
 }
 function shareUrl(code) {
   return location.origin + location.pathname + "?trip=" + code;
@@ -55,7 +79,9 @@ function renderQuestion() {
   // Pre-select our recommended answer so the couple can breeze through,
   // confirming or changing each one as they go.
   if (!state.answers[i] && RECOMMENDED[i] !== undefined) {
-    state.answers[i] = q.options[RECOMMENDED[i]];
+    state.answers[i] = Array.isArray(RECOMMENDED[i])
+      ? RECOMMENDED[i].map(k => q.options[k])
+      : q.options[RECOMMENDED[i]];
   }
 
   // progress
@@ -77,14 +103,22 @@ function renderQuestion() {
 
   el("#q-emoji").textContent = q.emoji;
   el("#q-text").textContent = q.text;
-  el("#q-hint").textContent = sec.blurb;
+  el("#q-hint").textContent = q.multi ? "Select all that apply, then tap Next" : sec.blurb;
+
+  // optional "good to know" info box above the options
+  const infoBox = el("#q-info");
+  infoBox.hidden = !q.info;
+  infoBox.textContent = q.info || "";
 
   const opts = el("#options");
   opts.innerHTML = "";
   q.options.forEach((opt, oi) => {
-    const isRec = RECOMMENDED[i] === oi;
+    const isRec = Array.isArray(RECOMMENDED[i]) ? RECOMMENDED[i].includes(oi) : RECOMMENDED[i] === oi;
+    const isSel = q.multi
+      ? Array.isArray(state.answers[i]) && state.answers[i].includes(opt)
+      : state.answers[i] === opt;
     const b = document.createElement("button");
-    b.className = "option" + (state.answers[i] === opt ? " selected" : "");
+    b.className = "option" + (isSel ? " selected" : "");
     b.innerHTML =
       `<span class="opt-emoji">${opt.emoji || "•"}</span>` +
       `<span class="opt-label">${opt.label}${isRec ? ' <span class="opt-rec">(recommended)</span>' : ""}</span>` +
@@ -93,14 +127,44 @@ function renderQuestion() {
     opts.appendChild(b);
   });
 
+  // multi-select questions advance via an explicit Next button
+  const nextBtn = el("#multi-next");
+  nextBtn.hidden = !q.multi;
+  if (q.multi) nextBtn.disabled = !(Array.isArray(state.answers[i]) && state.answers[i].length);
+
   // nav
   el("#nav-back").disabled = i === 0;
-  el("#nav-hint").textContent = "Tap your choice to continue — our pick is pre-selected";
+  el("#nav-hint").textContent = q.multi
+    ? "Pick as many as you like"
+    : "Tap your choice to continue — our pick is pre-selected";
+}
+
+function advance() {
+  if (state.index < TOTAL_QUESTIONS - 1) {
+    state.index++;
+    renderQuestion();
+  } else {
+    finish();
+  }
 }
 
 function selectOption(optIndex) {
   const i = state.index;
   const q = QUESTIONS[i];
+
+  if (q.multi) {
+    // toggle this option in the selection set — advancing happens via Next
+    const opt = q.options[optIndex];
+    let arr = Array.isArray(state.answers[i]) ? state.answers[i] : [];
+    arr = arr.includes(opt) ? arr.filter(o => o !== opt) : [...arr, opt];
+    state.answers[i] = arr;
+    document.querySelectorAll("#options .option").forEach((o, idx) => {
+      o.classList.toggle("selected", arr.includes(q.options[idx]));
+    });
+    el("#multi-next").disabled = arr.length === 0;
+    return;
+  }
+
   state.answers[i] = q.options[optIndex];
 
   // visually mark selection
@@ -109,15 +173,10 @@ function selectOption(optIndex) {
   });
 
   // auto-advance for a snappy mobile feel
-  setTimeout(() => {
-    if (state.index < TOTAL_QUESTIONS - 1) {
-      state.index++;
-      renderQuestion();
-    } else {
-      finish();
-    }
-  }, 260);
+  setTimeout(advance, 260);
 }
+
+el("#multi-next").addEventListener("click", advance);
 
 el("#nav-back").addEventListener("click", () => {
   if (state.index > 0) { state.index--; renderQuestion(); }
@@ -156,9 +215,35 @@ function finish() {
 /* ---------- Render the full itinerary ---------- */
 function fmtMoney(n) { return "$" + n.toLocaleString("en-US"); }
 
+/* Selected option indexes for a multi-select question, by its id */
+function selectedIdx(id) {
+  const qi = QUESTIONS.findIndex(q => q.id === id);
+  const a = state.answers[qi];
+  if (!Array.isArray(a)) return [];
+  return a.map(o => QUESTIONS[qi].options.indexOf(o)).filter(k => k >= 0);
+}
+
+/* Where to actually get each kind of kosher food / each kind of shopping */
+const FOOD_RECS = [
+  "Real kosher Thai — pad thai, curries and noodle soups at the Chabad house restaurants in Bangkok, Phuket and Chiang Mai",
+  "Kosher burgers & steaks — Bangkok's kosher grills in the Sukhumvit area do a proper steak night",
+  "Israeli breakfasts, salads and shakshuka — the Israeli-style kosher spots clustered near the Chabad houses",
+  "Kosher sushi & fresh fish — ask at the Chabad restaurants; fin-and-scale fish is easy to source all over Thailand",
+  "Kosher pizza, waffles, bakeries and ice cream — Bangkok's kosher bakery scene will genuinely surprise you",
+];
+const SHOP_RECS = [
+  "Brand-name sneakers & sportswear — Bangkok's mega-malls (Siam Paragon, CentralWorld) and their outlet floors",
+  "Clothing & fashion — Platinum Fashion Mall and the whole Pratunam district are wholesale heaven",
+  "Handmade wood décor & furniture — Chatuchak market in Bangkok and Chiang Mai's craft villages (Baan Tawai)",
+  "Electronics & gadgets — MBK Center and Pantip Plaza in Bangkok",
+  "Gifts & souvenirs — the glittering night markets in every city on your route",
+];
+
 function renderResult(rec, code) {
   const root = el("#result-content");
   const placeNames = rec.legs.map(l => l.destination.name).join(" → ");
+  const foodPicks = selectedIdx("foods").map(k => FOOD_RECS[k]).filter(Boolean);
+  const shopPicks = selectedIdx("shopping").map(k => SHOP_RECS[k]).filter(Boolean);
   if (code === undefined) code = answersToCode(state.answers);
   const link = code ? shareUrl(code) : null;
   const shareText = `🇹🇭 Check out our custom Thailand trip plan — ${rec.meta.tripLength} days: ${placeNames}!`;
@@ -251,6 +336,39 @@ function renderResult(rec, code) {
         <div class="stat"><div class="stat-label">Per day (2 ppl)</div><div class="stat-value">${fmtMoney(rec.tier.perDay[0]*2)}–${fmtMoney(rec.tier.perDay[1]*2)}</div></div>
       </div>
       <p style="font-size:.78rem;color:var(--ink-soft);margin-top:10px">*On-the-ground costs (hotels, food, activities, local transport). International flights not included.</p>
+    </div>
+
+    <div class="panel">
+      <h3>🍍 Eating kosher in Thailand — good to know</h3>
+      <ul class="info-list">
+        <li>This whole plan assumes strictly kosher — your meals come from Chabad restaurants, Shabbos catering, kosher groceries, or your own kitchen.</li>
+        <li>Markets and street stalls overflow with fresh tropical fruit — mango, mangosteen, rambutan, fresh coconut — all yours to enjoy.</li>
+        <li>The local Chabad publishes a list of supermarket products that are kosher even without a printed symbol — pick up the current list at any Chabad house.</li>
+        <li>The fresh juice &amp; smoothie stands you'll see everywhere (just fruit and ice) are considered kosher by the local Chabad.</li>
+        <li>Stock up on kosher meat, wine and staples in Bangkok before heading to the islands.</li>
+      </ul>
+    </div>
+
+    ${foodPicks.length ? `
+    <div class="panel">
+      <h3>😋 Your kind of food — all kosher</h3>
+      <ul class="info-list">${foodPicks.map(f => `<li>${f}</li>`).join("")}</ul>
+      <p style="font-size:.8rem;color:var(--ink-soft);margin-top:10px">Ask each Chabad for the current list of kosher restaurants and caterers — it grows every year.</p>
+    </div>` : ""}
+
+    ${shopPicks.length ? `
+    <div class="panel">
+      <h3>🛍️ Where to shop for what you love</h3>
+      <ul class="info-list">${shopPicks.map(s => `<li>${s}</li>`).join("")}</ul>
+    </div>` : ""}
+
+    <div class="panel">
+      <h3>📱 Before you fly — three quick setups</h3>
+      <ul class="info-list">
+        <li><b>Grab</b> (Thailand's Uber) — install it, attach your credit card, and verify your phone number <b>before you leave Israel</b>. It's the easiest way to get around.</li>
+        <li><b>Airalo eSIM</b> — load it on your phones before the flight; it has the cheapest data plans in Thailand.</li>
+        <li><b>Mopeds</b> — everywhere and cheap: rent your own, or hire a moped-taxi driver for quick hops.</li>
+      </ul>
     </div>
 
     <h3 style="margin:26px 4px 2px;color:var(--emerald-deep);font-size:1.25rem">🗺️ Your custom itinerary</h3>
